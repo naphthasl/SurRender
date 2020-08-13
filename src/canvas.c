@@ -56,8 +56,7 @@ SR_RGBPixel SR_GetPixel(
     unsigned short x,
     unsigned short y)
 {
-    const SR_RGBPixel empty = {0, 0, 0};
-    if (!canvas->pixels) return empty;
+    if (!canvas->pixels) return SR_CreateRGB(0, 0, 0);
 
     return canvas->pixels[SR_CalcPosition(canvas, x, y)];
 }
