@@ -17,9 +17,10 @@ SR_RGBAPixel SR_CreateRGBA(
 SR_RGBPixel SR_RGBAtoRGB(SR_RGBAPixel pixel)
     { return pixel.rgb; }
 
-SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel)
+SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha)
 {
     SR_RGBAPixel temp;
     temp.rgb = pixel;
+    temp.alpha = alpha;
     return temp;
 }
