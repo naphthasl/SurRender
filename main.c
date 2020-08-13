@@ -44,7 +44,7 @@ int main(void)
         0x000000FF,
         0x0000FF00,
         0x00FF0000,
-        0x00000000))) {
+        0xFF000000))) {
         status = 4;
         goto sr_destroycanvas;
     }
@@ -71,13 +71,18 @@ event_loop:
         goto sdl_freesurf;
     }
 
-    if (SDL_BlitScaled(canvysurf, NULL, wsurf, &destrect) < 0) {
+    if (SDL_FillRect(wsurf, NULL, SDL_MapRGB(wsurf->format, 0, 0, 0)) < 0) {
         status = 6;
         goto sdl_freesurf;
     }
 
-    if (SDL_UpdateWindowSurface(win) < 0) {
+    if (SDL_BlitScaled(canvysurf, NULL, wsurf, &destrect) < 0) {
         status = 7;
+        goto sdl_freesurf;
+    }
+
+    if (SDL_UpdateWindowSurface(win) < 0) {
+        status = 8;
         goto sdl_freesurf;
     }
 
