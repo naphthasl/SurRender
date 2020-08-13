@@ -14,7 +14,7 @@ void SR_ResizeCanvas(
         canvas->pixels,
         (unsigned int)width *
         (unsigned int)height *
-        sizeof(SR_RGBPixel));
+        sizeof(SR_RGBAPixel));
 }
 
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
@@ -46,18 +46,18 @@ void SR_CanvasSetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y,
-    SR_RGBPixel pixel)
+    SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
-SR_RGBPixel SR_CanvasGetPixel(
+SR_RGBAPixel SR_CanvasGetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
 {
-    if (!canvas->pixels) return SR_CreateRGB(0, 0, 0);
+    if (!canvas->pixels) return SR_CreateRGBA(0, 0, 0, 0);
 
     return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
