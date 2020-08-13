@@ -26,10 +26,14 @@ int main(void)
         goto sdl_quit;
     }
 
-    /* and SR_NewCanvas doesn't have any return code
-       whatsoever because it could never fail to allocate
-       the canvas itself. it could not possibly happen. */
+    /* edit: this is the current way of testing whether
+       canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
+
+    if (!canvy.pixels) {
+        status = 3;
+        goto sdl_destroywin;
+    }
 
     if (!(canvysurf = SDL_CreateRGBSurfaceFrom(
         canvy.pixels,
@@ -62,9 +66,7 @@ event_loop:
        actually blitting it to the window */
 
     /* refresh the window */
-    wsurf = SDL_GetWindowSurface(win);
-
-    if (!wsurf) {
+    if (!(wsurf = SDL_GetWindowSurface(win))) {
         status = 5;
         goto sdl_freesurf;
     }
