@@ -20,6 +20,7 @@ void SR_ResizeCanvas(
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
 {
     SR_Canvas temp;
+    temp.pixels = NULL;
     SR_ResizeCanvas(&temp, width, height);
 
     return temp;
