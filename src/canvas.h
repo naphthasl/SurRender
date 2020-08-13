@@ -6,7 +6,7 @@
     typedef struct SR_Canvas {
         unsigned short width;
         unsigned short height;
-	    SR_RGBPixel *pixels;
+	    SR_RGBAPixel *pixels;
 	} SR_Canvas;
 
     // Make a canvas larger or smaller. Preserves the contents, but not
@@ -37,10 +37,10 @@
         SR_Canvas *canvas,
         unsigned short x,
         unsigned short y,
-        SR_RGBPixel pixel);
+        SR_RGBAPixel pixel);
 
     // Get the value of a pixel in the canvas
-    SR_RGBPixel SR_CanvasGetPixel(
+    SR_RGBAPixel SR_CanvasGetPixel(
         SR_Canvas *canvas,
         unsigned short x,
         unsigned short y);
