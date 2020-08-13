@@ -31,7 +31,7 @@ unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
-unsigned int SR_CalcPosition(
+unsigned int SR_CanvasCalcPosition(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
@@ -41,24 +41,24 @@ unsigned int SR_CalcPosition(
     return ((unsigned int)canvas->width * x) + y;
 }
 
-void SR_SetPixel(
+void SR_CanvasSetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y,
     SR_RGBPixel pixel)
 {
     if (!canvas->pixels) return;
-    canvas->pixels[SR_CalcPosition(canvas, x, y)] = pixel;
+    canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
-SR_RGBPixel SR_GetPixel(
+SR_RGBPixel SR_CanvasGetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
 {
     if (!canvas->pixels) return SR_CreateRGB(0, 0, 0);
 
-    return canvas->pixels[SR_CalcPosition(canvas, x, y)];
+    return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
 
 void SR_DestroyCanvas(SR_Canvas *canvas)

@@ -27,20 +27,20 @@
 
     // Calculate the "real" position of a pixel in the canvas - not really
     // recommended to use this yourself.
-    unsigned int SR_CalcPosition(
+    unsigned int SR_CanvasCalcPosition(
         SR_Canvas *canvas,
         unsigned short x,
         unsigned short y);
 
     // Set the value of a pixel in the canvas
-    void SR_SetPixel(
+    void SR_CanvasSetPixel(
         SR_Canvas *canvas,
         unsigned short x,
         unsigned short y,
         SR_RGBPixel pixel);
 
     // Get the value of a pixel in the canvas
-    SR_RGBPixel SR_GetPixel(
+    SR_RGBPixel SR_CanvasGetPixel(
         SR_Canvas *canvas,
         unsigned short x,
         unsigned short y);
