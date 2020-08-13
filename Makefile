@@ -14,7 +14,7 @@ libsurrender.a: ${OBJ}
 	ar rcs $@ $^
 
 a.out: main.c libsurrender.a
-	${CC} $^
+	${CC} $^ -lSDL2
 
 clean:
 	rm -f a.out libsurrender.* ${OBJ}
