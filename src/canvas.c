@@ -45,8 +45,7 @@ bool SR_CanvasCheckOutOfBounds(
     unsigned short x,
     unsigned short y)
 {
-    if (x >= canvas->width) return true;
-    else if (y >= canvas->height) return true;
+    if (x >= canvas->width || y >= canvas->height) return true;
     else return false;
 }
 
