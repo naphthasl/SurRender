@@ -62,6 +62,8 @@
     // Malloc a new canvas of given size and start copying every pixel from the
     // specified old canvas to the new one, starting at the given position.
     // This also allows you to create cropped versions of a canvas! :)
+    // Note: This does not destroy the old canvas. If you don't need it anymore
+    // don't forget to destroy it, or it will remain allocated.
     SR_Canvas SR_CopyCanvas(
         SR_Canvas *canvas,
         unsigned short copy_start_x,
