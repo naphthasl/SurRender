@@ -61,6 +61,9 @@ int main(void)
         goto sdl_freesurf;
     }
 
+    // For test
+    unsigned short x, y, z;
+
 event_loop:
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
@@ -88,6 +91,17 @@ event_loop:
         }
     }
 
+    for (x = 0; x <= canvy.width; x++) {
+        for (y = 0; y <= canvy.height; y++) {
+            SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
+                x,
+                y,
+                z,
+                255
+            ));
+        }
+    }
+    z++;
     /* update the canvas here, the rest is
        actually blitting it to the window */
 
