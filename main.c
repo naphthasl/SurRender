@@ -86,7 +86,7 @@ event_loop:
         goto sdl_freesurf;
     }
 
-    SDL_Delay(12);
+    SDL_Delay(40);
     goto event_loop;
 
 sdl_freesurf:
