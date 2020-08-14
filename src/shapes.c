@@ -32,7 +32,7 @@ void SR_DrawLine(
 
 void SR_DrawTri(
 	SR_Canvas *canvas,
-	SR_RGBAPixel color,
+	SR_RGBAPixel colour,
 	int x0,
 	int y0,
 	int x1,
@@ -40,7 +40,7 @@ void SR_DrawTri(
 	int x2,
 	int y2)
 {
-	SR_DrawLine(canvas, color, x0, y0, x1, y1);
-	SR_DrawLine(canvas, color, x1, y1, x2, y2);
-	SR_DrawLine(canvas, color, x2, y2, x0, y0);
+	SR_DrawLine(canvas, colour, x0, y0, x1, y1);
+	SR_DrawLine(canvas, colour, x1, y1, x2, y2);
+	SR_DrawLine(canvas, colour, x2, y2, x0, y0);
 }

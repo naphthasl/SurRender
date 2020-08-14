@@ -64,7 +64,7 @@ event_loop:
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
-	
+    
     /* refresh the window */
     if (!(wsurf = SDL_GetWindowSurface(win))) {
         status = 5;
