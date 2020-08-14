@@ -8,9 +8,6 @@ int main(void)
     SDL_Event ev;
     int status;
 
-    float aspect_ratio;
-    int i;
-
     /* needed for blitting */
     SDL_Surface *wsurf, *canvysurf;
     SDL_Rect destrect;
