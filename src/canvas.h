@@ -29,6 +29,12 @@
     // recommended to use this yourself.
     unsigned int SR_CanvasCalcPosition(
         SR_Canvas *canvas,
+        unsigned int x,
+        unsigned int y);
+
+    // Check if a pixel is out of bounds
+    bool SR_CanvasCheckOutOfBounds(
+        SR_Canvas *canvas,
         unsigned short x,
         unsigned short y);
 

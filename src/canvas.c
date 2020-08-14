@@ -34,12 +34,20 @@ unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
 
 unsigned int SR_CanvasCalcPosition(
     SR_Canvas *canvas,
+    unsigned int x,
+    unsigned int y)
+{
+    return (((unsigned int)canvas->width) * y) + x;
+}
+
+bool SR_CanvasCheckOutOfBounds(
+    SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
 {
-    x = (unsigned int)(MIN(canvas->width  - 1, x));
-    y = (unsigned int)(MIN(canvas->height - 1, x));
-    return ((unsigned int)canvas->width * x) + y;
+    if (x >= canvas->width) return true;
+    else if (y >= canvas->height) return true;
+    else return false;
 }
 
 void SR_CanvasSetPixel(
@@ -49,6 +57,7 @@ void SR_CanvasSetPixel(
     SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
+    if (SR_CanvasCheckOutOfBounds(canvas, x, y)) return;
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
@@ -57,7 +66,9 @@ SR_RGBAPixel SR_CanvasGetPixel(
     unsigned short x,
     unsigned short y)
 {
-    if (!canvas->pixels) return SR_CreateRGBA(0, 0, 0, 0);
+    const SR_RGBAPixel empty = SR_CreateRGBA(0, 0, 0, 0);
+    if (!canvas->pixels) return empty;
+    if (SR_CanvasCheckOutOfBounds(canvas, x, y)) return empty;
 
     return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
