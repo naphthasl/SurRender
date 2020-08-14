@@ -21,7 +21,7 @@ int main(void)
         SDL_WINDOWPOS_CENTERED,
         640,
         480,
-        0))) {
+        SDL_WINDOW_RESIZABLE))) {
         status = 2;
         goto sdl_quit;
     }
@@ -30,7 +30,7 @@ int main(void)
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
 
-    if (!SR_CanvasAllocated(&canvy)) {
+    if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
         goto sdl_destroywin;
     }
@@ -49,10 +49,15 @@ int main(void)
         goto sr_destroycanvas;
     }
 
-    /* recompute these after resizing the window
-       if you decide to add support for that */
+    /* this rectangle will be recomputed
+       every time the window is resized */
     destrect.x =   0, destrect.y =   0,
     destrect.w = 640, destrect.h = 480;
+
+    if (!(wsurf = SDL_GetWindowSurface(win))) {
+        status = 5;
+        goto sdl_freesurf;
+    }
 
 event_loop:
     while (SDL_PollEvent(&ev)) {
@@ -60,17 +65,31 @@ event_loop:
             status = 0;
             goto sdl_freesurf;
         }
+
+        if (ev.type == SDL_WINDOWEVENT)
+        if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+            if (!(wsurf = SDL_GetWindowSurface(win))) {
+                status = 5;
+                goto sdl_freesurf;
+            }
+
+            if ((float)ev.window.data1 / ev.window.data2 >= canvy.ratio)
+                aspect_ratio = (float)ev.window.data2 / canvy.height;
+            else
+                aspect_ratio = (float)ev.window.data1 / canvy.width;
+
+            destrect.w = canvy.width  * aspect_ratio,
+            destrect.h = canvy.height * aspect_ratio;
+
+            destrect.x = (ev.window.data1 - destrect.w) * 0.5f,
+            destrect.y = (ev.window.data2 - destrect.h) * 0.5f;
+        }
     }
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
 
     /* refresh the window */
-    if (!(wsurf = SDL_GetWindowSurface(win))) {
-        status = 5;
-        goto sdl_freesurf;
-    }
-
     if (SDL_FillRect(wsurf, NULL, SDL_MapRGB(wsurf->format, 0, 0, 0)) < 0) {
         status = 6;
         goto sdl_freesurf;

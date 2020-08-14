@@ -6,7 +6,8 @@
     typedef struct SR_Canvas {
         unsigned short width;
         unsigned short height;
-	    SR_RGBAPixel *pixels;
+        float ratio;
+        SR_RGBAPixel *pixels;
 	} SR_Canvas;
 
     // Make a canvas larger or smaller. Preserves the contents, but not
@@ -56,5 +57,5 @@
     void SR_DestroyCanvas(SR_Canvas *canvas);
 
     // Check if the canvas has been successfully allocated
-    bool SR_CanvasAllocated(SR_Canvas *canvas);
+    bool SR_CanvasIsValid(SR_Canvas *canvas);
 #endif
