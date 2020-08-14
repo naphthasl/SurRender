@@ -70,7 +70,7 @@ SR_RGBAPixel SR_RGBABlender(
                 (pixel_base_whole & 0xFF000000)
             );
         case SR_BLEND_OVERLAY:
-            if (((uint16_t)alpha_modifier * pixel_top.alpha) > 255)
+            if (((uint16_t)alpha_modifier * pixel_top.alpha) > 16129)
                 final = pixel_top_whole;
             else final = pixel_base_whole;
 
