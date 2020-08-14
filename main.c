@@ -104,7 +104,7 @@ event_loop:
     z++;
     /* update the canvas here, the rest is
        actually blitting it to the window */
-
+    
     /* refresh the window */
     if (SDL_FillRect(wsurf, NULL, SDL_MapRGB(wsurf->format, 0, 0, 0)) < 0) {
         status = 6;
