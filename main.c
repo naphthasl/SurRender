@@ -17,24 +17,24 @@ int main(void)
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return 1;
 
-    if (!(win = SDL_CreateWindow(
-        "SurRender demo by rodger",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        640,
-        480,
-        SDL_WINDOW_RESIZABLE))) {
-        status = 2;
-        goto sdl_quit;
-    }
-
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
-    canvy = SR_NewCanvas(640, 480);
+    canvy = SR_NewCanvas(256, 256);
 
     if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
         goto sdl_destroywin;
+    }
+
+    if (!(win = SDL_CreateWindow(
+        "SurRender demo by rodger",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        canvy.width,
+        canvy.height,
+        SDL_WINDOW_RESIZABLE))) {
+        status = 2;
+        goto sdl_quit;
     }
 
     if (!(canvysurf = SDL_CreateRGBSurfaceFrom(
@@ -53,8 +53,8 @@ int main(void)
 
     /* this rectangle will be recomputed
        every time the window is resized */
-    destrect.x =   0, destrect.y =   0,
-    destrect.w = 640, destrect.h = 480;
+    destrect.x = 0, destrect.y = 0,
+    destrect.w = canvy.width, destrect.h = canvy.height;
 
     if (!(wsurf = SDL_GetWindowSurface(win))) {
         status = 5;
