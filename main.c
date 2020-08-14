@@ -103,6 +103,7 @@ event_loop:
         }
     }
     z++;
+    */
 
     SR_DrawLine(
         &canvy,
@@ -112,7 +113,7 @@ event_loop:
             255,
             SR_BLEND_ADDITIVE
         ), 
-        0, 0, 255, 255);
+        0, 0, 32, 64);
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
