@@ -8,6 +8,9 @@ int main(void)
     SDL_Event ev;
     int status;
 
+    float aspect_ratio;
+    int i;
+
     /* needed for blitting */
     SDL_Surface *wsurf, *canvysurf;
     SDL_Rect destrect;
@@ -21,7 +24,7 @@ int main(void)
         SDL_WINDOWPOS_CENTERED,
         640,
         480,
-        0))) {
+        SDL_WINDOW_RESIZABLE))) {
         status = 2;
         goto sdl_quit;
     }
@@ -54,11 +57,36 @@ int main(void)
     destrect.x =   0, destrect.y =   0,
     destrect.w = 640, destrect.h = 480;
 
+    if (!(wsurf = SDL_GetWindowSurface(win))) {
+        status = 5;
+        goto sdl_freesurf;
+    }
+
 event_loop:
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
             status = 0;
             goto sdl_freesurf;
+        }
+
+        if (ev.type == SDL_WINDOWEVENT)
+        if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+            if (!(wsurf = SDL_GetWindowSurface(win))) {
+                status = 5;
+                goto sdl_freesurf;
+            }
+
+            if ((float)ev.window.data1 / ev.window.data2
+                >= (float)canvy.width / canvy.height)
+                aspect_ratio = (float)ev.window.data2 / canvy.height;
+            else
+                aspect_ratio = (float)ev.window.data1 / canvy.width;
+
+            destrect.w = canvy.width  * aspect_ratio,
+            destrect.h = canvy.height * aspect_ratio;
+
+            destrect.x = (ev.window.data1 - destrect.w) * 0.5f,
+            destrect.y = (ev.window.data2 - destrect.h) * 0.5f;
         }
     }
 
@@ -66,11 +94,6 @@ event_loop:
        actually blitting it to the window */
 
     /* refresh the window */
-    if (!(wsurf = SDL_GetWindowSurface(win))) {
-        status = 5;
-        goto sdl_freesurf;
-    }
-
     if (SDL_FillRect(wsurf, NULL, SDL_MapRGB(wsurf->format, 0, 0, 0)) < 0) {
         status = 6;
         goto sdl_freesurf;
