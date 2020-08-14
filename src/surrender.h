@@ -3,4 +3,5 @@
     #include "glbl.h"
     #include "colours.h"
     #include "canvas.h"
+    #include "shapes.h"
 #endif

@@ -11,11 +11,12 @@ void SR_ResizeCanvas(
     canvas->height = height;
     canvas->ratio = (float)width / height;
 
-    canvas->pixels = realloc(
-        canvas->pixels,
+    unsigned int size = (
         (unsigned int)width *
         (unsigned int)height *
         sizeof(SR_RGBAPixel));
+
+    if (size) canvas->pixels = realloc(canvas->pixels, size);
 }
 
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
@@ -78,3 +79,21 @@ void SR_DestroyCanvas(SR_Canvas *canvas)
 
 bool SR_CanvasIsValid(SR_Canvas *canvas)
     { return BOOLIFY(canvas->pixels); }
+
+SR_Canvas SR_CopyCanvas(
+    SR_Canvas *canvas,
+    unsigned short copy_start_x,
+    unsigned short copy_start_y,
+    unsigned short new_width,
+    unsigned short new_height)
+{
+    SR_Canvas new = SR_NewCanvas(new_width, new_height);
+
+    unsigned short x, y;
+    for (x = 0; x <= new_width; x++)
+        for (y = 0; y <= new_height; y++)
+            SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
+                canvas, x + copy_start_x, y + copy_start_y));
+
+    return new;
+}
