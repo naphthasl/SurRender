@@ -46,3 +46,45 @@ void SR_DrawTri(
     SR_DrawLine(canvas, colour, x1, y1, x2, y2);
     SR_DrawLine(canvas, colour, x2, y2, x0, y0);
 }
+
+void SR_DrawRect(
+	SR_Canvas *canvas,
+	SR_RGBAPixel colour,
+	unsigned short x,
+	unsigned short y,
+	unsigned short w,
+	unsigned short h)
+{
+	w += x;
+	h += y;
+	unsigned short x1 = MIN(canvas->width - 1, w);
+	unsigned short y1 = MIN(canvas->height - 1, h);
+	
+	for (unsigned short xi = x; xi <= x1; xi++) {
+		SR_CanvasSetPixel(canvas, xi, y, colour);
+		SR_CanvasSetPixel(canvas, xi, h, colour);
+	}
+	
+	for (unsigned short yi = y + 1; yi < y1; yi++) {
+		SR_CanvasSetPixel(canvas, x, yi, colour);
+		SR_CanvasSetPixel(canvas, w, yi, colour);
+	}
+}
+
+void SR_DrawRectFill(
+	SR_Canvas *canvas,
+	SR_RGBAPixel colour,
+	unsigned short x,
+	unsigned short y,
+	unsigned short w,
+	unsigned short h)
+{
+	unsigned short x1 = MIN(canvas->width - 1, w + x);
+	unsigned short y1 = MIN(canvas->height - 1, h + y);
+	
+	for (unsigned short yi = y; yi <= y1; yi++) {
+		for (unsigned short xi = x; xi <= x1; xi++) {
+			SR_CanvasSetPixel(canvas, xi, yi, colour);
+		}
+	}
+}
