@@ -91,13 +91,9 @@ SR_Canvas SR_CopyCanvas(
 
     unsigned short x, y;
     for (x = 0; x <= new_width; x++)
-    {
         for (y = 0; y <= new_height; y++)
-        {
             SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
                 canvas, x + copy_start_x, y + copy_start_y));
-        }
-    }
 
     return new;
 }
