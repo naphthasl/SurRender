@@ -109,26 +109,25 @@ void SR_MergeCanvasIntoCanvas(
     // TODO: Add support for rotation
 
     unsigned short x, y;
-    for (x = 0; x < src_canvas->width; x++)
+    for(x = 0, y = 0; y < src_canvas->height; x++)
     {
-        for (y = 0; y < src_canvas->height; y++)
-        {
-            SR_CanvasSetPixel(
-                dest_canvas,
-                x + paste_start_x,
-                y + paste_start_y,
-                SR_RGBABlender(
-                    SR_CanvasGetPixel(
-                        dest_canvas,
-                        x + paste_start_x,
-                        y + paste_start_y
-                    ),
-                    SR_CanvasGetPixel(src_canvas, x, y),
-                    alpha_modifier,
-                    mode
-                )
-            );
-        }
+        if(x > src_canvas->width) { x = 0; y++; }
+        
+        SR_CanvasSetPixel(
+            dest_canvas,
+            x + paste_start_x,
+            y + paste_start_y,
+            SR_RGBABlender(
+                SR_CanvasGetPixel(
+                    dest_canvas,
+                    x + paste_start_x,
+                    y + paste_start_y
+                ),
+                SR_CanvasGetPixel(src_canvas, x, y),
+                alpha_modifier,
+                mode
+            )
+        );
     }
 }
 
