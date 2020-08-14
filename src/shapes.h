@@ -23,4 +23,21 @@
 		int y1,
 		int x2,
 		int y2);
+	
+	//get pain wrecked
+	void SR_DrawRect(
+		SR_Canvas *canvas,
+		SR_RGBAPixel colour,
+		unsigned short x,
+		unsigned short y,
+		unsigned short w,
+		unsigned short h);
+	
+	void SR_DrawRectFill(
+		SR_Canvas *canvas,
+		SR_RGBAPixel colour,
+		unsigned short x,
+		unsigned short y,
+		unsigned short w,
+		unsigned short h);
 #endif
