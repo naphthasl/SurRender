@@ -102,6 +102,8 @@ event_loop:
         }
     }
     z++;
+
+    SR_DrawLine(&canvy, SR_CreateRGBA(255, 0, 0, 255), 0, 0, 64, 32);
     /* update the canvas here, the rest is
        actually blitting it to the window */
     
