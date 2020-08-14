@@ -37,8 +37,8 @@ unsigned int SR_CanvasCalcPosition(
     unsigned short x,
     unsigned short y)
 {
-    x = (unsigned int)(MAX(canvas->width  - 1, x));
-    y = (unsigned int)(MAX(canvas->height - 1, x));
+    x = (unsigned int)(MIN(canvas->width  - 1, x));
+    y = (unsigned int)(MIN(canvas->height - 1, x));
     return ((unsigned int)canvas->width * x) + y;
 }
 
