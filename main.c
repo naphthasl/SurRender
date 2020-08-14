@@ -106,10 +106,10 @@ event_loop:
     SR_DrawLine(
         &canvy,
         SR_RGBABlender(
-            SR_CreateRGBA(128, 0, 0, 255),
-            SR_CreateRGBA(128, 255, 0, 255),
+            SR_CreateRGBA(rand(), rand(), rand(), 255),
+            SR_CreateRGBA(rand(), rand(), rand(), 255),
             255,
-            SR_BLEND_ADDITIVE
+            SR_BLEND_OVERLAY
         ), 
         0, 0, rand() % (canvy.width), rand() % (canvy.height));
 

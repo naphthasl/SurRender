@@ -70,4 +70,16 @@
         unsigned short copy_start_y,
         unsigned short new_width,
         unsigned short new_height);
+
+    // Allows you to blend/merge a source canvas on to a destination canvas.
+    // Can be pasted at a given offset (paste_start_x and paste_start_y)
+    // Uses alpha modifier and mode values just like SR_RGBABlender. Usually
+    // you'll just want a modifier of 255 and mode SR_BLEND_ADDITIVE.
+    void SR_MergeCanvasIntoCanvas(
+        SR_Canvas *dest_canvas,
+        SR_Canvas *src_canvas,
+        unsigned short paste_start_x,
+        unsigned short paste_start_y,
+        uint8_t alpha_modifier,
+        char mode);
 #endif

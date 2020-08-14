@@ -14,8 +14,12 @@
 	} SR_RGBAPixel;
 
     enum SR_BlendingModes {
+        // XOR all RGB values
         SR_BLEND_XOR,
-        SR_BLEND_ADDITIVE
+        // Add RGB values together with clamping
+        SR_BLEND_ADDITIVE,
+        // Rounded overlay approach (fastest)
+        SR_BLEND_OVERLAY
     };
 
     // Construct an RGB colour value.
