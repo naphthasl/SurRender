@@ -103,7 +103,6 @@ event_loop:
         }
     }
     z++;
-    */
 
     SR_DrawLine(
         &canvy,
