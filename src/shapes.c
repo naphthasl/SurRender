@@ -3,8 +3,7 @@
 #include "colours.h"
 #include "shapes.h"
 
-//copy pasted from:
-//https://gist.github.com/bert/1085538#file-plot_line-c-L9
+/* rodger: rewritten, now based off Computer Graphics, C Version (2nd Ed.) */
 void SR_DrawLine(
     SR_Canvas *canvas,
     SR_RGBAPixel colour,
@@ -13,22 +12,21 @@ void SR_DrawLine(
     int x1, 
     int y1)
 {
-    int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
-    int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
-    int err = dx + dy, e2;
+    int dx = abs(x0 - x1), dy = abs(y0 - y1);
+    int p = (dy * 2) - dx;
+    int two_dy = 2 * dy, two_dydx = 2 * (dy - dx);
+    int x, y, x_end;
 
-    for (;;) {
-        SR_CanvasSetPixel(canvas, x0, y0, colour);
-        if (x0 == x1 && y0 == y1) break;
-        e2 = err << 1;
-        if (e2 >= dy) {
-            err += dy;
-            x0 += sx;
-        }
-        if (e2 <= dx) {
-            err += dx;
-            y0 += sy;
-        }
+    if (x0 > x1)  x = x1, y = y1, x_end = x0;
+    else          x = x0, y = y0, x_end = x1;
+
+    SR_CanvasSetPixel(canvas, x, y, colour);
+
+    while (x++ < x_end) {
+        if (p < 0) p += two_dy;
+        else       p += two_dydx, y++;
+
+        SR_CanvasSetPixel(canvas, x, y, colour);
     }
 }
 
