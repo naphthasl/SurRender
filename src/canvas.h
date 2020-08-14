@@ -29,6 +29,12 @@
     // recommended to use this yourself.
     unsigned int SR_CanvasCalcPosition(
         SR_Canvas *canvas,
+        unsigned int x,
+        unsigned int y);
+
+    // Check if a pixel is out of bounds
+    bool SR_CanvasCheckOutOfBounds(
+        SR_Canvas *canvas,
         unsigned short x,
         unsigned short y);
 
@@ -48,4 +54,7 @@
     // Destroy the in-memory representation of the canvas
     // (Must create a new canvas or resize the current one in order to access)
     void SR_DestroyCanvas(SR_Canvas *canvas);
+
+    // Check if the canvas has been successfully allocated
+    bool SR_CanvasAllocated(SR_Canvas *canvas);
 #endif

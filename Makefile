@@ -13,7 +13,7 @@ libsurrender.so: ${OBJ}
 libsurrender.a: ${OBJ}
 	ar rcs $@ $^
 
-a.out: main.c libsurrender.a
+a.out: main.c libsurrender.a radix/libradix.a
 	${CC} $^ -lSDL2
 
 clean:

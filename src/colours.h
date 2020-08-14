@@ -25,5 +25,5 @@
 
     // Conversion
     SR_RGBPixel SR_RGBAtoRGB(SR_RGBAPixel pixel);
-    SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel);
+    SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha);
 #endif
