@@ -111,7 +111,11 @@ event_loop:
             255,
             SR_BLEND_OVERLAY
         ), 
-        0, 0, rand() % (canvy.width), rand() % (canvy.height));
+        rand() % (canvy.width),
+        rand() % (canvy.height),
+        rand() % (canvy.width),
+        rand() % (canvy.height)
+    );
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
