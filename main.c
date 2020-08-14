@@ -49,8 +49,8 @@ int main(void)
         goto sr_destroycanvas;
     }
 
-    /* recompute these after resizing the window
-       if you decide to add support for that */
+    /* this rectangle will be recomputed
+       every time the window is resized */
     destrect.x =   0, destrect.y =   0,
     destrect.w = 640, destrect.h = 480;
 
