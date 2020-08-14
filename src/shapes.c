@@ -12,6 +12,13 @@ void SR_DrawLine(
     int x1, 
     int y1)
 {
+    if (y0 <= y1)
+	{
+		int t;
+		t = y0, y0 = y1, y1 = t;
+		t = x0, x0 = x1, x1 = t;
+	}
+
     int dx = abs(x0 - x1), dy = abs(y0 - y1);
     int p = (dy * 2) - dx;
     int two_dy = 2 * dy, two_dydx = 2 * (dy - dx);
