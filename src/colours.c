@@ -25,6 +25,12 @@ SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha)
     return temp;
 }
 
+uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
+    { return *(uint32_t *) &pix; }
+
+SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
+    { return *(SR_RGBAPixel *) &pix; }
+
 SR_RGBAPixel SR_RGBABlender(
     SR_RGBAPixel pixel_base,
     SR_RGBAPixel pixel_top,
@@ -52,8 +58,8 @@ SR_RGBAPixel SR_RGBABlender(
         }
     }
 
-    uint32_t pixel_base_whole = *(uint32_t *) &pixel_base;
-    uint32_t pixel_top_whole  = *(uint32_t *) &pixel_top ;
+    uint32_t pixel_base_whole = SR_RGBAtoWhole(pixel_base);
+    uint32_t pixel_top_whole  = SR_RGBAtoWhole(pixel_top );
 
     switch (mode)
     {
@@ -71,13 +77,20 @@ SR_RGBAPixel SR_RGBABlender(
                 ((pixel_top_whole & 0x00FF0000) >> 16), 255) << 16) |
                 (pixel_base_whole & 0xFF000000)
             );
+
+            break;
         case SR_BLEND_OVERLAY:
             if (((uint16_t)alpha_modifier * pixel_top.alpha) > 16129)
                 final = pixel_top_whole;
             else final = pixel_base_whole;
 
             break;
+        default:
+            fprintf(stderr, "Invalid blending mode!\n");
+            exit(EXIT_FAILURE);
+
+            break;
     }
 
-    return *(SR_RGBAPixel *) &final;
+    return SR_WholetoRGBA(final);
 }

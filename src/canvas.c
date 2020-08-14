@@ -131,3 +131,76 @@ void SR_MergeCanvasIntoCanvas(
         }
     }
 }
+
+// Private
+#define getByte(value, n) (value >> (n * 8) & 0xFF)
+float lerp(float s, float e, float t) { return s + (e - s) * t; }
+float blerp(float c00, float c10, float c01, float c11, float tx, float ty)
+    { return lerp(lerp(c00, c10, tx), lerp(c01, c11, tx), ty); }
+
+// Private
+SR_Canvas SR_BilinearCanvasScale(
+    SR_Canvas *src,
+    unsigned short newWidth,
+    unsigned short newHeight)
+{
+    SR_Canvas dest = SR_NewCanvas(newWidth, newHeight);
+
+    unsigned int x, y;
+    for(x = 0, y = 0; y < newHeight; x++)
+    {
+        if(x > newWidth) { x = 0; y++; }
+
+        float gx = x / (float)(newWidth ) * (SR_CanvasGetWidth (src) - 1);
+        float gy = y / (float)(newHeight) * (SR_CanvasGetHeight(src) - 1);
+        int gxi = (int)gx;
+        int gyi = (int)gy;
+
+        uint32_t c00 = SR_RGBAtoWhole(
+            SR_CanvasGetPixel(src, gxi    , gyi    ));
+        uint32_t c10 = SR_RGBAtoWhole(
+            SR_CanvasGetPixel(src, gxi + 1, gyi    ));
+        uint32_t c01 = SR_RGBAtoWhole(
+            SR_CanvasGetPixel(src, gxi    , gyi + 1));
+        uint32_t c11 = SR_RGBAtoWhole(
+            SR_CanvasGetPixel(src, gxi + 1, gyi + 1));
+
+        uint32_t result = 0;
+        uint8_t i; for(i = 0; i < 4; i++)
+        {
+            result |= (uint8_t)blerp(
+                getByte(c00, i),
+                getByte(c10, i),
+                getByte(c01, i),
+                getByte(c11, i),
+                gx - gxi, gy - gyi
+            ) << (8 * i);
+        }
+
+        SR_CanvasSetPixel(&dest, x, y, SR_WholetoRGBA(result));
+    }
+
+    return dest;
+}
+
+SR_Canvas SR_CanvasScale(
+    SR_Canvas *src,
+    unsigned short newWidth,
+    unsigned short newHeight,
+    char mode)
+{
+    SR_Canvas final;
+    switch (mode)
+    {
+        case SR_SCALE_BILINEAR:
+            final = SR_BilinearCanvasScale(src, newWidth, newHeight);
+
+            break;
+        default:
+            fprintf(stderr, "Invalid scaling mode!\n");
+            exit(EXIT_FAILURE);
+
+            break;
+    }
+    return final;
+}

@@ -10,6 +10,10 @@
         SR_RGBAPixel *pixels;
 	} SR_Canvas;
 
+    enum SR_ScaleModes {
+        SR_SCALE_BILINEAR
+    };
+
     // Make a canvas larger or smaller. Preserves the contents, but not
     // accurately. May ruin the current contents of the canvas.
     void SR_ResizeCanvas(
@@ -81,5 +85,14 @@
         unsigned short paste_start_x,
         unsigned short paste_start_y,
         uint8_t alpha_modifier,
+        char mode);
+
+    // Return a scaled up version of a canvas using SR_ScaleModes for the mode.
+    // Will malloc a new canvas! You will need to destroy the old one if
+    // needed.
+    SR_Canvas SR_CanvasScale(
+        SR_Canvas *src,
+        unsigned short newWidth,
+        unsigned short newHeight,
         char mode);
 #endif

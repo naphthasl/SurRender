@@ -35,6 +35,8 @@
     // Conversion
     SR_RGBPixel SR_RGBAtoRGB(SR_RGBAPixel pixel);
     SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha);
+    uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix);
+    SR_RGBAPixel SR_WholetoRGBA(uint32_t pix);
 
     // Blend RGBA values
     // Use mode provided by SR_BlendingModes
