@@ -56,5 +56,5 @@
     void SR_DestroyCanvas(SR_Canvas *canvas);
 
     // Check if the canvas has been successfully allocated
-    bool SR_CanvasAllocated(SR_Canvas *canvas);
+    bool SR_CanvasIsValid(SR_Canvas *canvas);
 #endif

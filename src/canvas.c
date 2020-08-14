@@ -75,5 +75,5 @@ SR_RGBAPixel SR_CanvasGetPixel(
 void SR_DestroyCanvas(SR_Canvas *canvas)
     { if (canvas->pixels) { free(canvas->pixels); canvas->pixels = NULL; } }
 
-bool SR_CanvasAllocated(SR_Canvas *canvas)
+bool SR_CanvasIsValid(SR_Canvas *canvas)
     { return BOOLIFY(canvas->pixels); }
