@@ -9,6 +9,7 @@ void SR_ResizeCanvas(
 {
     canvas->width = width;
     canvas->height = height;
+    canvas->ratio = (float)width / height;
 
     canvas->pixels = realloc(
         canvas->pixels,

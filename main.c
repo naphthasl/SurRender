@@ -76,8 +76,7 @@ event_loop:
                 goto sdl_freesurf;
             }
 
-            if ((float)ev.window.data1 / ev.window.data2
-                >= (float)canvy.width / canvy.height)
+            if ((float)ev.window.data1 / ev.window.data2 >= canvy.ratio)
                 aspect_ratio = (float)ev.window.data2 / canvy.height;
             else
                 aspect_ratio = (float)ev.window.data1 / canvy.width;

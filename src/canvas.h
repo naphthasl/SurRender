@@ -6,6 +6,7 @@
     typedef struct SR_Canvas {
         unsigned short width;
         unsigned short height;
+        float ratio;
         SR_RGBAPixel *pixels;
 	} SR_Canvas;
 
