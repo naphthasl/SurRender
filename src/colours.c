@@ -33,24 +33,28 @@ SR_RGBAPixel SR_RGBABlender(
 {
     uint32_t final = 0;
 
-    if (pixel_top.alpha)
+    if (mode != SR_BLEND_OVERLAY)
     {
-        pixel_top.rgb.red   *= ((float)pixel_top.alpha / 255.0);
-        pixel_top.rgb.blue  *= ((float)pixel_top.alpha / 255.0);
-        pixel_top.rgb.green *= ((float)pixel_top.alpha / 255.0);
-    }
+        if (pixel_top.alpha)
+        {
+            pixel_top.rgb.red   *= ((float)pixel_top.alpha / 255.0);
+            pixel_top.rgb.blue  *= ((float)pixel_top.alpha / 255.0);
+            pixel_top.rgb.green *= ((float)pixel_top.alpha / 255.0);
+        }
 
-    if (alpha_modifier)
-    {
-        pixel_top.rgb.red   *= ((float)alpha_modifier / 255.0);
-        pixel_top.rgb.blue  *= ((float)alpha_modifier / 255.0);
-        pixel_top.rgb.green *= ((float)alpha_modifier / 255.0);
+        if (alpha_modifier)
+        {
+            pixel_top.rgb.red   *= ((float)alpha_modifier / 255.0);
+            pixel_top.rgb.blue  *= ((float)alpha_modifier / 255.0);
+            pixel_top.rgb.green *= ((float)alpha_modifier / 255.0);
+        }
     }
 
     uint32_t pixel_base_whole = *(uint32_t *) &pixel_base;
     uint32_t pixel_top_whole  = *(uint32_t *) &pixel_top ;
 
-    switch (mode) {
+    switch (mode)
+    {
         case SR_BLEND_XOR:
             final = pixel_base_whole ^ (pixel_top_whole & 0x00FFFFFF);
 
@@ -65,6 +69,10 @@ SR_RGBAPixel SR_RGBABlender(
                 ((pixel_top_whole & 0x00FF0000) >> 16), 255) << 16) |
                 (pixel_base_whole & 0xFF000000)
             );
+        case SR_BLEND_OVERLAY:
+            if (((uint16_t)alpha_modifier * pixel_top.alpha) > 255)
+                final = pixel_top_whole;
+            else final = pixel_base_whole;
 
             break;
     }

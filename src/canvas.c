@@ -90,10 +90,42 @@ SR_Canvas SR_CopyCanvas(
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
     unsigned short x, y;
-    for (x = 0; x <= new_width; x++)
-        for (y = 0; y <= new_height; y++)
+    for (x = 0; x < new_width; x++)
+        for (y = 0; y < new_height; y++)
             SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
                 canvas, x + copy_start_x, y + copy_start_y));
 
     return new;
+}
+
+void SR_MergeCanvasIntoCanvas(
+    SR_Canvas *dest_canvas,
+    SR_Canvas *src_canvas,
+    unsigned short paste_start_x,
+    unsigned short paste_start_y,
+    uint8_t alpha_modifier,
+    char mode)
+{
+    unsigned short x, y;
+    for (x = 0; x < src_canvas->width; x++)
+    {
+        for (y = 0; y < src_canvas->height; y++)
+        {
+            SR_CanvasSetPixel(
+                dest_canvas,
+                x + paste_start_x,
+                y + paste_start_y,
+                SR_RGBABlender(
+                    SR_CanvasGetPixel(
+                        dest_canvas,
+                        x + paste_start_x,
+                        y + paste_start_y
+                    ),
+                    SR_CanvasGetPixel(src_canvas, x, y),
+                    alpha_modifier,
+                    mode
+                )
+            );
+        }
+    }
 }
