@@ -48,4 +48,7 @@
     // Destroy the in-memory representation of the canvas
     // (Must create a new canvas or resize the current one in order to access)
     void SR_DestroyCanvas(SR_Canvas *canvas);
+
+    // Check if the canvas has been successfully allocated
+    bool SR_CanvasAllocated(SR_Canvas *canvas);
 #endif
