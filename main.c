@@ -30,7 +30,7 @@ int main(void)
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
 
-    if (!canvy.pixels) {
+    if (!SR_CanvasAllocated(&canvy)) {
         status = 3;
         goto sdl_destroywin;
     }
