@@ -91,6 +91,7 @@ event_loop:
         }
     }
 
+    /*
     for (x = 0; x <= canvy.width; x++) {
         for (y = 0; y <= canvy.height; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -103,7 +104,16 @@ event_loop:
     }
     z++;
 
-    SR_DrawLine(&canvy, SR_CreateRGBA(255, 0, 0, 255), 0, 0, 64, 32);
+    SR_DrawLine(
+        &canvy,
+        SR_RGBABlender(
+            SR_CreateRGBA(128, 0, 0, 255),
+            SR_CreateRGBA(128, 255, 0, 255),
+            255,
+            SR_BLEND_ADDITIVE
+        ), 
+        0, 0, 255, 255);
+
     /* update the canvas here, the rest is
        actually blitting it to the window */
     
