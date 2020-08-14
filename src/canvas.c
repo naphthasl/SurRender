@@ -106,6 +106,8 @@ void SR_MergeCanvasIntoCanvas(
     uint8_t alpha_modifier,
     char mode)
 {
+    // TODO: Add support for rotation
+
     unsigned short x, y;
     for (x = 0; x < src_canvas->width; x++)
     {

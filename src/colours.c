@@ -31,6 +31,8 @@ SR_RGBAPixel SR_RGBABlender(
     uint8_t alpha_modifier,
     char mode)
 {
+    // TODO: Make this faster and cleaner. Much faster and cleaner!
+
     uint32_t final = 0;
 
     if (mode != SR_BLEND_OVERLAY)
