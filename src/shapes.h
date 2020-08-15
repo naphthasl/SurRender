@@ -34,8 +34,18 @@
 		int x2,
 		int y2);
 	
+	//draws a triangle with a flat side, used internally by SR_DrawTri
+	void SR_DrawTriFlat(
+		SR_Canvas *canvas,
+		SR_RGBAPixel colour,
+		int x0,
+		int y0,
+		int x1_0,
+		int x1_1,
+		int y1);
+	
 	//get pain wrecked
-	void SR_DrawRect(
+	void SR_DrawRectOutline(
 		SR_Canvas *canvas,
 		SR_RGBAPixel colour,
 		unsigned short x,
@@ -43,7 +53,7 @@
 		unsigned short w,
 		unsigned short h);
 	
-	void SR_DrawRectFill(
+	void SR_DrawRect(
 		SR_Canvas *canvas,
 		SR_RGBAPixel colour,
 		unsigned short x,

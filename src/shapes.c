@@ -77,7 +77,19 @@ void SR_DrawTri(
     }
 }
 
-void SR_DrawRect(
+void SR_DrawTriFlat(
+	SR_Canvas *canvas,
+	SR_RGBAPixel colour,
+	int x0,
+	int y0,
+	int x1_0,
+	int x1_1,
+	int y1)
+{
+	
+}
+
+void SR_DrawRectOutline(
 	SR_Canvas *canvas,
 	SR_RGBAPixel colour,
 	unsigned short x,
@@ -101,7 +113,7 @@ void SR_DrawRect(
 	}
 }
 
-void SR_DrawRectFill(
+void SR_DrawRect(
 	SR_Canvas *canvas,
 	SR_RGBAPixel colour,
 	unsigned short x,
