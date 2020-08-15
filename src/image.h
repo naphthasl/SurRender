@@ -5,6 +5,7 @@
     #include "colours.h"
 
     #define STB_IMAGE_IMPLEMENTATION
+    #define STBI_ONLY_BMP
     #include "stb_image.h"
 
     // Load a Radix memory blob as an image and convert it into a canvas
