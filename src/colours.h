@@ -19,7 +19,9 @@
         // Add RGB values together with clamping
         SR_BLEND_ADDITIVE,
         // Rounded overlay approach (fastest)
-        SR_BLEND_OVERLAY
+        SR_BLEND_OVERLAY,
+        // Replace base alpha with inverted top alpha
+        SR_BLEND_INVERT_DROP
     };
 
     // Construct an RGB colour value.
