@@ -19,13 +19,21 @@ SR_Canvas LD_STBICanv(uint8_t *image, int *x, int *y)
 
     if (!temp.pixels)
     {
-        fprintf(stderr, "Image loading failed!\n");
-        exit(EXIT_FAILURE);
-    }
+        temp = SR_NewCanvas(2, 2);
+        if (!temp.pixels) {
+            fprintf(stderr, "Unable to allocate canvas memory!\n");
+            exit(EXIT_FAILURE);
+        }
 
-    temp.width = *x;
-    temp.height = *y;
-    temp.ratio = (float)temp.width / temp.height;
+        SR_CanvasSetPixel(&temp, 0, 0, SR_CreateRGBA(255, 0  , 255, 255));
+        SR_CanvasSetPixel(&temp, 0, 1, SR_CreateRGBA(0  , 0  , 0  , 255));
+        SR_CanvasSetPixel(&temp, 1, 0, SR_CreateRGBA(0  , 0  , 0  , 255));
+        SR_CanvasSetPixel(&temp, 1, 1, SR_CreateRGBA(255, 0  , 255, 255));
+    } else {
+        temp.width = *x;
+        temp.height = *y;
+        temp.ratio = (float)temp.width / temp.height;
+    }
 
     return temp;
 }
