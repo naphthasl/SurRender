@@ -16,7 +16,7 @@
 
     // Make a canvas larger or smaller. Preserves the contents, but not
     // accurately. May ruin the current contents of the canvas.
-    void SR_ResizeCanvas(
+    bool SR_ResizeCanvas(
         SR_Canvas *canvas,
         unsigned short width,
         unsigned short height);

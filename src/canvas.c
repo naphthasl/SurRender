@@ -2,13 +2,16 @@
 #include "canvas.h"
 #include "colours.h"
 
-void SR_ResizeCanvas(
+bool SR_ResizeCanvas(
     SR_Canvas *canvas,
     unsigned short width,
     unsigned short height)
 {
+    if (!width || !height) return false;
+
     canvas->width = width;
     canvas->height = height;
+    
     canvas->ratio = (float)width / height;
 
     unsigned int size = (
@@ -16,7 +19,8 @@ void SR_ResizeCanvas(
         (unsigned int)height *
         sizeof(SR_RGBAPixel));
 
-    if (size) canvas->pixels = realloc(canvas->pixels, size);
+    canvas->pixels = realloc(canvas->pixels, size);
+    return BOOLIFY(canvas->pixels);
 }
 
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
@@ -112,7 +116,7 @@ void SR_MergeCanvasIntoCanvas(
     for(x = 0, y = 0; y < src_canvas->height; x++)
     {
         if(x > src_canvas->width) { x = 0; y++; }
-        
+
         SR_CanvasSetPixel(
             dest_canvas,
             x + paste_start_x,
