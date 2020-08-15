@@ -4,4 +4,5 @@
     #include "colours.h"
     #include "canvas.h"
     #include "shapes.h"
+    #include "image.h"
 #endif

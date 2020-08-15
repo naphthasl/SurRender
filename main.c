@@ -20,6 +20,7 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(256, 256);
+    SR_Canvas rem = SR_ImageFileToCanvas("./TEST.BMP");
 
     if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
@@ -116,6 +117,11 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
+
+    SR_MergeCanvasIntoCanvas(
+        &canvy, &rem,
+        rand() % (canvy.width), rand() % (canvy.height),
+        255, SR_BLEND_ADDITIVE);
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
