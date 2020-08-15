@@ -41,7 +41,7 @@ SR_RGBAPixel SR_RGBABlender(
 
     uint32_t final = 0;
 
-    if (mode != SR_BLEND_OVERLAY)
+    if (mode == SR_BLEND_ADDITIVE || mode == SR_BLEND_XOR)
     {
         float alpha_mul = (
             ((float)pixel_top.alpha / 255.0) *

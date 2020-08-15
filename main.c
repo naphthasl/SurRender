@@ -121,7 +121,7 @@ event_loop:
     SR_MergeCanvasIntoCanvas(
         &canvy, &rem,
         rand() % (canvy.width), rand() % (canvy.height),
-        255, SR_BLEND_INVERT_DROP);
+        255, SR_BLEND_ADDITIVE);
 
     /* update the canvas here, the rest is
        actually blitting it to the window */
