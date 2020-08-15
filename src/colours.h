@@ -21,7 +21,9 @@
         // Rounded overlay approach (fastest)
         SR_BLEND_OVERLAY,
         // Replace base alpha with inverted top alpha
-        SR_BLEND_INVERT_DROP
+        SR_BLEND_INVERT_DROP,
+        // Replace base alpha with top alpha
+        SR_BLEND_DROP
     };
 
     // Construct an RGB colour value.

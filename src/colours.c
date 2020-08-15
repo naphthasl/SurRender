@@ -91,6 +91,11 @@ SR_RGBAPixel SR_RGBABlender(
             final |= (255 - ((pixel_top_whole & 0xFF000000) >> 24)) << 24;
 
             break;
+        case SR_BLEND_DROP:
+            final = ((pixel_base_whole & 0x00FFFFFF) |
+                (pixel_top_whole & 0xFF000000));
+
+            break;
         default:
             fprintf(stderr, "Invalid blending mode!\n");
             exit(EXIT_FAILURE);
