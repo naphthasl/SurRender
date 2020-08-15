@@ -91,7 +91,6 @@ event_loop:
             destrect.y = (ev.window.data2 - destrect.h) * 0.5f;
         }
     }
-
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -122,6 +121,17 @@ event_loop:
         &canvy, &rem,
         rand() % (canvy.width), rand() % (canvy.height),
         255, SR_BLEND_ADDITIVE);
+
+    SR_DrawTri(
+        &canvy,
+        SR_CreateRGBA(rand(), rand(), rand(), 255),
+        rand() % (canvy.width),
+        rand() % (canvy.height),
+        rand() % (canvy.width),
+        rand() % (canvy.height),
+        rand() % (canvy.width),
+        rand() % (canvy.height)
+    );
 
     /* update the canvas here, the rest is
        actually blitting it to the window */

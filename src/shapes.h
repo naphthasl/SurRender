@@ -14,12 +14,22 @@
 		int y1);
 	
 	//triangle drawing function
-    void SR_DrawTri(
+    void SR_DrawTriOutline(
 		SR_Canvas *canvas,
 		SR_RGBAPixel colour,
 		int x0,
 		int y0,
 		int x1,
+		int y1,
+		int x2,
+		int y2);
+
+	void SR_DrawTri(
+		SR_Canvas *canvas,
+		SR_RGBAPixel colour,
+		int x0,
+		int y0, 
+		int x1, 
 		int y1,
 		int x2,
 		int y2);
