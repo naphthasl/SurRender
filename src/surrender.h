@@ -5,4 +5,5 @@
     #include "canvas.h"
     #include "shapes.h"
     #include "image.h"
+    #include "rays.h"
 #endif
