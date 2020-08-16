@@ -120,10 +120,12 @@
 	
 	// Returns a canvas that is hecking rotated, hopefully
 	// Expects an angle in radians
+	// enable safety if you are a wuss
 	// Will malloc a new canvas!
 	SR_Canvas SR_CanvasRotate(
 		SR_Canvas *src,
-		double angle);
+		double angle,
+		bool safety_padding);
 	
 	// Returns a canvas rotated 90, 180, or 270 degrees counter-clockwise
 	// Will malloc a new canvas!

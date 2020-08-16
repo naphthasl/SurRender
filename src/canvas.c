@@ -270,39 +270,55 @@ SR_Canvas SR_CanvasYShear(
 
 SR_Canvas SR_CanvasRotate(
 	SR_Canvas *src,
-	double angle)
+	double angle,
+	bool safety_padding)
 {
 	//magic numbers warning
 	//modulo by 2pi
 	//multiply by 2/pi, same as dividing by pi/2
 	char quarter_turns = floor(fmod(angle, 6.28318530718) * 0.636619772368);
 	SR_Canvas temp0;
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	if (safety_padding) {
+		temp0 = SR_NewCanvas(w << 1, h << 1);
+		SR_ZeroFill(&temp0);
+		SR_MergeCanvasIntoCanvas(
+			&temp0, src, w >> 1, h >> 1,
+			255, SR_BLEND_ADDITIVE);
+		//
+	} else {
+		temp0 = src;
+		//
+	}
+	SR_Canvas temp1;
 	switch (quarter_turns) {
 		case 0:
 		default:
-			temp0 = SR_CopyCanvas(src, 0, 0, src->width, src->height);
+			temp1 = temp0;
 			break;
 		case 1:
-			temp0 = SR_CanvasRot90(src);
+			temp1 = SR_CanvasRot90(temp0);
 			break;
 		case 2:
-			temp0 = SR_CanvasRot180(src);
+			temp1 = SR_CanvasRot180(temp0);
 			break;
 		case 3:
-			temp0 = SR_CanvasRot270(src);
+			temp1 = SR_CanvasRot270(temp0);
 			break;
 	}
+	SR_DestroyCanvas(&temp0);
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
 	double xshear = -tan(angle / 2) * (src-> height >> 1);
 	double yshear = sin(angle) * (src-> width >> 1);
 	
-	SR_Canvas temp1 = SR_CanvasYShear(&temp0, xshear);
-	SR_DestroyCanvas(&temp0);
-	SR_Canvas temp2 = SR_CanvasXShear(&temp1, yshear);
+	SR_Canvas temp2 = SR_CanvasYShear(&temp1, xshear);
 	SR_DestroyCanvas(&temp1);
-	SR_Canvas final = SR_CanvasYShear(&temp2, xshear);
+	SR_Canvas temp3 = SR_CanvasXShear(&temp2, yshear);
+	SR_DestroyCanvas(&temp2);
+	SR_Canvas final = SR_CanvasYShear(&temp3, xshear);
 	SR_DestroyCanvas(&temp2);
 	return final;
 }
