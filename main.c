@@ -20,7 +20,16 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(256, 256);
-    SR_Canvas rem = SR_ImageFileToCanvas("./TEST.BMP");
+    SR_Canvas imagetest = SR_ImageFileToCanvas("./TEST.BMP");
+
+    /*
+    free(imagetest.pixels); imagetest.pixels = NULL;
+    SR_DrawRectFill(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 256, 256);
+    SR_MergeCanvasIntoCanvas(
+        &canvy, &imagetest,
+        0, 0,
+        255, SR_BLEND_ADDITIVE);
+    */
 
     if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
@@ -91,6 +100,7 @@ event_loop:
             destrect.y = (ev.window.data2 - destrect.h) * 0.5f;
         }
     }
+
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -118,7 +128,7 @@ event_loop:
     );
 
     SR_MergeCanvasIntoCanvas(
-        &canvy, &rem,
+        &canvy, &imagetest,
         rand() % (canvy.width), rand() % (canvy.height),
         255, SR_BLEND_ADDITIVE);
 

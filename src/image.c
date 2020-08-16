@@ -21,8 +21,7 @@ SR_Canvas LD_STBICanv(uint8_t *image, int *x, int *y)
     {
         temp = SR_NewCanvas(2, 2);
         if (!temp.pixels) {
-            fprintf(stderr, "Unable to allocate canvas memory!\n");
-            exit(EXIT_FAILURE);
+            return temp;
         }
 
         SR_CanvasSetPixel(&temp, 0, 0, SR_CreateRGBA(255, 0  , 255, 255));
