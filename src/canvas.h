@@ -118,4 +118,10 @@
 	SR_Canvas SR_CanvasRotate(
 		SR_Canvas *src,
 		double angle);
+	
+	// Returns a canvas rotated 90, 180, or 270 degrees counter-clockwise
+	// Will malloc a new canvas!
+	SR_Canvas SR_CanvasRot90(SR_Canvas *src);
+	SR_Canvas SR_CanvasRot180(SR_Canvas *src);
+	SR_Canvas SR_CanvasRot270(SR_Canvas *src);
 #endif

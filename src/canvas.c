@@ -235,13 +235,13 @@ SR_Canvas SR_CanvasXShear(
 	unsigned short ycenter = h >> 1;
 	double skew = (double)skew_amount / (double)ycenter;
 	skew_amount = abs(skew_amount);
-	SR_Canvas final = SR_NewCanvas(w + skew_amount << 1, h);
+	SR_Canvas final = SR_NewCanvas(w, h);
 	SR_ZeroFill(&final);
 	for (unsigned short y = 0; y < h; y++) {
 		int xshift = (y - ycenter) * skew;
 		for (unsigned short x = 0; x < w; x++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, x + skew_amount + xshift, y, pixel);
+			SR_CanvasSetPixel(&final, x + xshift, y, pixel);
 		}
 	}
 	return final;
@@ -256,13 +256,13 @@ SR_Canvas SR_CanvasYShear(
 	unsigned short xcenter = w >> 1;
 	double skew = (double)skew_amount / (double)xcenter;
 	skew_amount = abs(skew_amount);
-	SR_Canvas final = SR_NewCanvas(w, h + skew_amount << 1);
+	SR_Canvas final = SR_NewCanvas(w, h);
 	SR_ZeroFill(&final);
 	for (unsigned short x = 0; x < w; x++) {
 		int yshift = (x - xcenter) * skew;
 		for (unsigned short y = 0; y < h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, x, y + skew_amount + yshift, pixel);
+			SR_CanvasSetPixel(&final, x, y + yshift, pixel);
 		}
 	}
 	return final;
@@ -272,13 +272,79 @@ SR_Canvas SR_CanvasRotate(
 	SR_Canvas *src,
 	double angle)
 {
-	double xshear = -sin(angle);
-	double yshear = tan(angle / 2);
+	//magic numbers warning
+	//modulo by 2pi
+	//multiply by 2/pi, same as dividing by pi/2
+	char quarter_turns = floor(fmod(angle, 6.28318530718) * 0.636619772368);
+	SR_Canvas temp0;
+	switch (quarter_turns) {
+		case 0:
+		default:
+			temp0 = SR_CopyCanvas(src, 0, 0, src->width, src->height);
+			break;
+		case 1:
+			temp0 = SR_CanvasRot90(src);
+			break;
+		case 2:
+			temp0 = SR_CanvasRot180(src);
+			break;
+		case 3:
+			temp0 = SR_CanvasRot270(src);
+			break;
+	}
 	
-	SR_Canvas temp0 = SR_CanvasXShear(src, xshear);
-	SR_Canvas temp1 = SR_CanvasYShear(&temp0, yshear);
+	//modulo by pi/2
+	angle = fmod(angle, 1.57079632679);
+	double xshear = -tan(angle / 2) * (src-> height >> 1);
+	double yshear = sin(angle) * (src-> width >> 1);
+	
+	SR_Canvas temp1 = SR_CanvasYShear(&temp0, xshear);
 	SR_DestroyCanvas(&temp0);
-	SR_Canvas final = SR_CanvasXShear(&temp1, xshear);
+	SR_Canvas temp2 = SR_CanvasXShear(&temp1, yshear);
 	SR_DestroyCanvas(&temp1);
+	SR_Canvas final = SR_CanvasYShear(&temp2, xshear);
+	SR_DestroyCanvas(&temp2);
+	return final;
+}
+
+SR_Canvas SR_CanvasRot90(SR_Canvas *src) {
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	SR_Canvas final = SR_NewCanvas(h, w);
+	SR_ZeroFill(&final);
+	for (unsigned short x = 0; x < w; x++) {
+		for (unsigned short y = 0; y < h; y++) {
+			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+			SR_CanvasSetPixel(&final, y, w - x, pixel);
+		}
+	}
+	return final;
+}
+
+SR_Canvas SR_CanvasRot180(SR_Canvas *src) {
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	SR_Canvas final = SR_NewCanvas(w, h);
+	SR_ZeroFill(&final);
+	for (unsigned short x = 0; x < w; x++) {
+		for (unsigned short y = 0; y < h; y++) {
+			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+			SR_CanvasSetPixel(&final, w - x, h - y, pixel);
+		}
+	}
+	return final;
+}
+
+SR_Canvas SR_CanvasRot270(SR_Canvas *src) {
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	SR_Canvas final = SR_NewCanvas(h, w);
+	SR_ZeroFill(&final);
+	for (unsigned short x = 0; x < w; x++) {
+		for (unsigned short y = 0; y < h; y++) {
+			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+			SR_CanvasSetPixel(&final, h - y, x, pixel);
+		}
+	}
 	return final;
 }
