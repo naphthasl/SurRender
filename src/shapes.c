@@ -86,7 +86,7 @@ void SR_DrawTriFlat(
 	int x1_1,
 	int y1)
 {
-	
+	//todo????
 }
 
 void SR_DrawRectOutline(
