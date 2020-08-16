@@ -26,6 +26,8 @@ bool SR_ResizeCanvas(
 
 void SR_ZeroFill(SR_Canvas *canvas)
 {
+    if (!canvas->pixels) return;
+
     unsigned int size = (
         (unsigned int)canvas->width *
         (unsigned int)canvas->height *
