@@ -19,7 +19,7 @@ int main(void)
 
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
-    canvy = SR_NewCanvas(256, 256);
+    canvy = SR_NewCanvas(640, 480);
     SR_Canvas imagetest = SR_ImageFileToCanvas("./TEST.BMP");
 
     /*

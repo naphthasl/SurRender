@@ -63,7 +63,7 @@ void SR_CanvasSetPixel(
     SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
-    x %= canvas->width; x %= canvas->height;
+    x %= canvas->width; y %= canvas->height;
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
@@ -74,7 +74,7 @@ SR_RGBAPixel SR_CanvasGetPixel(
 {
     if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
 
-    x %= canvas->width; x %= canvas->height;
+    x %= canvas->width; y %= canvas->height;
 
     return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
