@@ -24,7 +24,7 @@ int main(void)
 
     // free(imagetest.pixels); imagetest.pixels = NULL;
     SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 256, 256);
-    imagetest = SR_CanvasXShear(&imagetest, 16);
+    imagetest = SR_CanvasRotate(&imagetest, 0.7853982);
     SR_MergeCanvasIntoCanvas(
         &canvy, &imagetest,
         0, 0,
