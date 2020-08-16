@@ -19,17 +19,16 @@ int main(void)
 
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
-    canvy = SR_NewCanvas(256, 256);
+    canvy = SR_NewCanvas(640, 480);
     SR_Canvas imagetest = SR_ImageFileToCanvas("./TEST.BMP");
 
-    /*
-    free(imagetest.pixels); imagetest.pixels = NULL;
-    SR_DrawRectFill(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 256, 256);
+    // free(imagetest.pixels); imagetest.pixels = NULL;
+    SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 256, 256);
+    imagetest = SR_CanvasXShear(&imagetest, 16);
     SR_MergeCanvasIntoCanvas(
         &canvy, &imagetest,
         0, 0,
         255, SR_BLEND_ADDITIVE);
-    */
 
     if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
@@ -101,6 +100,7 @@ event_loop:
         }
     }
 
+    /*
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -142,6 +142,7 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
+    */
 
     /* update the canvas here, the rest is
        actually blitting it to the window */

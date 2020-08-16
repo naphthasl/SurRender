@@ -24,6 +24,16 @@ bool SR_ResizeCanvas(
     return BOOLIFY(canvas->pixels);
 }
 
+void SR_ZeroFill(SR_Canvas *canvas)
+{
+    unsigned int size = (
+        (unsigned int)canvas->width *
+        (unsigned int)canvas->height *
+        sizeof(SR_RGBAPixel));
+
+    memset(canvas->pixels, 0, size);
+}
+
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
 {
     SR_Canvas temp;
@@ -63,7 +73,7 @@ void SR_CanvasSetPixel(
     SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
-    x %= canvas->width; x %= canvas->height;
+    x %= canvas->width; y %= canvas->height;
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
@@ -74,7 +84,7 @@ SR_RGBAPixel SR_CanvasGetPixel(
 {
     if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
 
-    x %= canvas->width; x %= canvas->height;
+    x %= canvas->width; y %= canvas->height;
 
     return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
