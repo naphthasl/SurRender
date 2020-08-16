@@ -267,3 +267,18 @@ SR_Canvas SR_CanvasYShear(
 	}
 	return final;
 }
+
+SR_Canvas SR_CanvasRotate(
+	SR_Canvas *src,
+	double angle)
+{
+	double xshear = -sin(angle);
+	double yshear = tan(angle / 2);
+	
+	SR_Canvas temp0 = SR_CanvasXShear(src, xshear);
+	SR_Canvas temp1 = SR_CanvasYShear(&temp0, yshear);
+	SR_DestroyCanvas(&temp0);
+	SR_Canvas final = SR_CanvasXShear(&temp1, xshear);
+	SR_DestroyCanvas(&temp1);
+	return final;
+}

@@ -111,4 +111,11 @@
     SR_Canvas SR_CanvasYShear(
 		SR_Canvas *src,
 		int skew_amount);
+	
+	// Returns a canvas that is hecking rotated, hopefully
+	// Expects an angle in radians
+	// Will malloc a new canvas!
+	SR_Canvas SR_CanvasRotate(
+		SR_Canvas *src,
+		double angle);
 #endif
