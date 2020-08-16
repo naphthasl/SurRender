@@ -318,8 +318,8 @@ SR_RotatedCanvas SR_CanvasRotate(
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
-	double xshear = -tan(angle / 2) * (src-> height >> 1);
-	double yshear = sin(angle) * (src-> width >> 1);
+	double xshear = -tan(angle / 2) * (h >> 1);
+	double yshear = sin(angle) * (w >> 1);
 	
 	SR_Canvas temp2 = SR_CanvasYShear(&temp1, xshear);
 	SR_DestroyCanvas(&temp1);
