@@ -20,6 +20,7 @@ bool SR_ResizeCanvas(
         sizeof(SR_RGBAPixel));
 
     canvas->pixels = realloc(canvas->pixels, size);
+
     return BOOLIFY(canvas->pixels);
 }
 
@@ -62,7 +63,7 @@ void SR_CanvasSetPixel(
     SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
-    if (SR_CanvasCheckOutOfBounds(canvas, x, y)) return;
+    x %= canvas->width; x %= canvas->height;
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
@@ -71,9 +72,9 @@ SR_RGBAPixel SR_CanvasGetPixel(
     unsigned short x,
     unsigned short y)
 {
-    const SR_RGBAPixel empty = SR_CreateRGBA(0, 0, 0, 0);
-    if (!canvas->pixels) return empty;
-    if (SR_CanvasCheckOutOfBounds(canvas, x, y)) return empty;
+    if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
+
+    x %= canvas->width; x %= canvas->height;
 
     return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
 }
@@ -93,11 +94,14 @@ SR_Canvas SR_CopyCanvas(
 {
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
-    unsigned short x, y;
-    for (x = 0; x < new_width; x++)
-        for (y = 0; y < new_height; y++)
-            SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
-                canvas, x + copy_start_x, y + copy_start_y));
+    if (new.pixels)
+    {
+        unsigned short x, y;
+        for (x = 0; x < new_width; x++)
+            for (y = 0; y < new_height; y++)
+                SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
+                    canvas, x + copy_start_x, y + copy_start_y));
+    }
 
     return new;
 }
@@ -148,6 +152,8 @@ SR_Canvas SR_BilinearCanvasScale(
     unsigned short newHeight)
 {
     SR_Canvas dest = SR_NewCanvas(newWidth, newHeight);
+
+    if (!dest.pixels) { return dest; }
 
     unsigned int x, y;
     for(x = 0, y = 0; y < newHeight; x++)
