@@ -21,6 +21,10 @@
         unsigned short width,
         unsigned short height);
 
+    // A canvas may contain garbage data when initially created. This will
+    // zero fill it for you, if needed.
+    void SR_ZeroFill(SR_Canvas *canvas);
+
     // Create a new canvas of the given size
     SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height);
 

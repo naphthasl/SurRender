@@ -24,6 +24,16 @@ bool SR_ResizeCanvas(
     return BOOLIFY(canvas->pixels);
 }
 
+void SR_ZeroFill(SR_Canvas *canvas)
+{
+    unsigned int size = (
+        (unsigned int)canvas->width *
+        (unsigned int)canvas->height *
+        sizeof(SR_RGBAPixel));
+
+    memset(canvas->pixels, 0, size);
+}
+
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
 {
     SR_Canvas temp;
