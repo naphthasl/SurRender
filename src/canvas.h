@@ -122,7 +122,7 @@
 	// Expects an angle in radians
 	// enable safety if you are a wuss
 	// Will malloc a new canvas!
-	SR_Canvas SR_CanvasRotate(
+	SR_RotatedCanvas SR_CanvasRotate(
 		SR_Canvas *src,
 		double angle,
 		bool safety_padding);

@@ -268,7 +268,7 @@ SR_Canvas SR_CanvasYShear(
 	return final;
 }
 
-SR_Canvas SR_CanvasRotate(
+SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas *src,
 	double angle,
 	bool safety_padding)
@@ -318,8 +318,14 @@ SR_Canvas SR_CanvasRotate(
 	SR_DestroyCanvas(&temp1);
 	SR_Canvas temp3 = SR_CanvasXShear(&temp2, yshear);
 	SR_DestroyCanvas(&temp2);
-	SR_Canvas final = SR_CanvasYShear(&temp3, xshear);
-	SR_DestroyCanvas(&temp2);
+	SR_Canvas temp4 = SR_CanvasYShear(&temp3, xshear);
+	SR_DestroyCanvas(&temp3);
+	
+	SR_RotatedCanvas final;
+	final.offset_x = -(w >> 1);
+	final.offset_y = -(h >> 1);
+	final.canvas = temp3;
+	SR_DestroyCanvas(&temp3);
 	return final;
 }
 
