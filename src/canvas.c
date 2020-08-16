@@ -213,3 +213,23 @@ SR_Canvas SR_CanvasScale(
     }
     return final;
 }
+
+SR_Canvas SR_CanvasXShear(
+		SR_Canvas *src,
+		int skew_amount)
+{
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	unsigned short ycenter = h >> 1;
+	double skew (double)(skew_amount / ycenter);
+	skew_amount = abs(skew_amount);
+	SR_Canvas final = SR_NewCanvas(w + skew_amount << 1, h);
+	for (unsigned short y = 0; y < h; y++) {
+		int xshift = (y - ycenter) * skew;
+		for (unsigned short x = 0; x < w; x++) {
+			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+			SR_CanvasSetPixel(&final, x + skew_amount + xshift, y, pixel);
+		}
+	}
+	return final;
+}
