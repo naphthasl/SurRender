@@ -10,6 +10,12 @@
         SR_RGBAPixel *pixels;
 	} SR_Canvas;
 
+    typedef struct SR_RotatedCanvas {
+        unsigned short offset_x;
+        unsigned short offset_y;
+        SR_Canvas canvas;
+    } SR_RotateBuffer;
+
     enum SR_ScaleModes {
         SR_SCALE_BILINEAR
     };
