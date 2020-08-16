@@ -234,6 +234,7 @@ SR_Canvas SR_CanvasXShear(
 	double skew = (double)skew_amount / (double)ycenter;
 	skew_amount = abs(skew_amount);
 	SR_Canvas final = SR_NewCanvas(w + skew_amount << 1, h);
+	SR_ZeroFill(&final);
 	for (unsigned short y = 0; y < h; y++) {
 		int xshift = (y - ycenter) * skew;
 		for (unsigned short x = 0; x < w; x++) {
