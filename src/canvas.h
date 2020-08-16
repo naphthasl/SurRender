@@ -14,7 +14,7 @@
         int offset_x;
         int offset_y;
         SR_Canvas canvas;
-    } SR_RotateBuffer;
+    } SR_RotatedCanvas;
 
     enum SR_ScaleModes {
         SR_SCALE_BILINEAR

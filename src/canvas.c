@@ -280,16 +280,19 @@ SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas temp0;
 	unsigned short w = src->width;
 	unsigned short h = src->height;
+	SR_RotatedCanvas final;
 	if (safety_padding) {
 		temp0 = SR_NewCanvas(w << 1, h << 1);
 		SR_ZeroFill(&temp0);
 		SR_MergeCanvasIntoCanvas(
 			&temp0, src, w >> 1, h >> 1,
 			255, SR_BLEND_ADDITIVE);
-		//
+		final.offset_x = -(w >> 1);
+		final.offset_y = -(h >> 1);
 	} else {
-		temp0 = src;
-		//
+		temp0 = SR_CopyCanvas(src, 0, 0, w, h);
+		final.offset_x = 0;
+		final.offset_y = 0;
 	}
 	SR_Canvas temp1;
 	switch (quarter_turns) {
@@ -298,13 +301,13 @@ SR_RotatedCanvas SR_CanvasRotate(
 			temp1 = temp0;
 			break;
 		case 1:
-			temp1 = SR_CanvasRot90(temp0);
+			temp1 = SR_CanvasRot90(&temp0);
 			break;
 		case 2:
-			temp1 = SR_CanvasRot180(temp0);
+			temp1 = SR_CanvasRot180(&temp0);
 			break;
 		case 3:
-			temp1 = SR_CanvasRot270(temp0);
+			temp1 = SR_CanvasRot270(&temp0);
 			break;
 	}
 	SR_DestroyCanvas(&temp0);
@@ -320,12 +323,8 @@ SR_RotatedCanvas SR_CanvasRotate(
 	SR_DestroyCanvas(&temp2);
 	SR_Canvas temp4 = SR_CanvasYShear(&temp3, xshear);
 	SR_DestroyCanvas(&temp3);
-	
-	SR_RotatedCanvas final;
-	final.offset_x = -(w >> 1);
-	final.offset_y = -(h >> 1);
-	final.canvas = temp3;
-	SR_DestroyCanvas(&temp3);
+	final.canvas = temp4;
+	SR_DestroyCanvas(&temp4);
 	return final;
 }
 
