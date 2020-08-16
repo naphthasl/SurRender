@@ -100,9 +100,15 @@
         unsigned short newHeight,
         char mode);
     
-    // Returns a canvas with the input canvas's content skewed
+    // Returns a canvas with the input canvas's content skewed horizontally
     // Will malloc a new canvas!
     SR_Canvas SR_CanvasXShear(
+		SR_Canvas *src,
+		int skew_amount);
+	
+	// Returns a canvas with the input canvas's content skewed vertically
+    // Will malloc a new canvas!
+    SR_Canvas SR_CanvasYShear(
 		SR_Canvas *src,
 		int skew_amount);
 #endif
