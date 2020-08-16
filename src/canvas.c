@@ -282,15 +282,16 @@ SR_RotatedCanvas SR_CanvasRotate(
 	unsigned short h = src->height;
 	SR_RotatedCanvas final;
 	if (safety_padding) {
+		//this causes the world to end???
 		w <<= 1;
 		h <<= 1;
 		temp0 = SR_NewCanvas(w, h);
 		SR_ZeroFill(&temp0);
 		SR_MergeCanvasIntoCanvas(
 			&temp0, src, w >> 2, h >> 2,
-			255, SR_BLEND_ADDITIVE);
-		final.offset_x = -(w >> 2);
-		final.offset_y = -(h >> 2);
+			255, SR_BLEND_OVERLAY);
+		final.offset_x = -(int)(w >> 2);
+		final.offset_y = -(int)(h >> 2);
 	} else {
 		temp0 = SR_CopyCanvas(src, 0, 0, w, h);
 		final.offset_x = 0;
