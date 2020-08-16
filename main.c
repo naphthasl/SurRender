@@ -20,8 +20,8 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
-    SR_Canvas imagetest = SR_ImageFileToCanvas("./PUCK.BMP");
-    SR_Canvas rotcanvas;
+    SR_Canvas imagetest = SR_ImageFileToCanvas("./KRABS.BMP");
+    SR_RotatedCanvas rotcanvas;
 	double speeen = 0.0;
 	
     // free(imagetest.pixels); imagetest.pixels = NULL;
@@ -142,12 +142,12 @@ event_loop:
 	/* the */
 	speeen += .05;
     SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 256, 256);
-    rotcanvas = SR_CanvasRotate(&imagetest, speeen);
+    rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
-        &canvy, &rotcanvas,
-        0, 0,
+        &canvy, &(rotcanvas.canvas),
+        rotcanvas.offset_x, rotcanvas.offset_y,
         255, SR_BLEND_OVERLAY);
-    SR_DestroyCanvas(&rotcanvas);
+    SR_DestroyCanvas(&(rotcanvas.canvas));
     
     /* update the canvas here, the rest is
        actually blitting it to the window */
