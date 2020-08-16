@@ -23,7 +23,9 @@
         // Replace base alpha with inverted top alpha
         SR_BLEND_INVERT_DROP,
         // Replace base alpha with top alpha
-        SR_BLEND_DROP
+        SR_BLEND_DROP,
+        // Replace entire top pixel with bottom pixel
+        SR_BLEND_REPLACE
     };
 
     // Construct an RGB colour value.

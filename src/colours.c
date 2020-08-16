@@ -96,6 +96,10 @@ SR_RGBAPixel __inline__ SR_RGBABlender(
                 (pixel_top_whole & 0xFF000000));
 
             break;
+        case SR_BLEND_REPLACE:
+            final = pixel_top_whole;
+
+            break;
         default:
             fprintf(stderr, "Invalid blending mode!\n");
             exit(EXIT_FAILURE);
