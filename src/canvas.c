@@ -51,7 +51,7 @@ unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
-unsigned int SR_CanvasCalcPosition(
+unsigned int __inline__ SR_CanvasCalcPosition(
     SR_Canvas *canvas,
     unsigned int x,
     unsigned int y)
@@ -59,7 +59,7 @@ unsigned int SR_CanvasCalcPosition(
     return (((unsigned int)canvas->width) * y) + x;
 }
 
-bool SR_CanvasCheckOutOfBounds(
+bool __inline__ SR_CanvasCheckOutOfBounds(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
@@ -68,7 +68,7 @@ bool SR_CanvasCheckOutOfBounds(
     else return false;
 }
 
-void SR_CanvasSetPixel(
+void __inline__ SR_CanvasSetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y,
@@ -79,7 +79,7 @@ void SR_CanvasSetPixel(
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
-SR_RGBAPixel SR_CanvasGetPixel(
+SR_RGBAPixel __inline__ SR_CanvasGetPixel(
     SR_Canvas *canvas,
     unsigned short x,
     unsigned short y)
