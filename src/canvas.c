@@ -289,7 +289,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 		SR_ZeroFill(&temp0);
 		SR_MergeCanvasIntoCanvas(
 			&temp0, src, w >> 2, h >> 2,
-			255, SR_BLEND_OVERLAY);
+			255, SR_BLEND_REPLACE);
 		final.offset_x = -(int)(w >> 2);
 		final.offset_y = -(int)(h >> 2);
 	} else {
