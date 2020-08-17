@@ -138,7 +138,7 @@ SR_Canvas SR_BilinearCanvasScale(
 
     if (!dest.pixels) { return dest; }
 
-    unsigned int x, y;
+    register unsigned int x, y;
     for(x = 0, y = 0; y < newHeight; x++)
     {
         if(x > newWidth) { x = 0; y++; }
