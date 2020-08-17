@@ -255,9 +255,9 @@ SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas temp0;
 	unsigned short w = src->width;
 	unsigned short h = src->height;
+	unsigned short largest_dimension = MAX(w, h);
 	SR_RotatedCanvas final;
 	if (safety_padding) {
-		//this causes the world to end???
 		w <<= 1;
 		h <<= 1;
 		temp0 = SR_NewCanvas(w, h);
@@ -272,75 +272,102 @@ SR_RotatedCanvas SR_CanvasRotate(
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
-	SR_Canvas temp1;
 	switch (quarter_turns) {
-		case 0:
-		default:
-			temp1 = SR_CopyCanvas(&temp0, 0, 0, w, h);
-			break;
 		case 1:
-			temp1 = SR_CanvasRot90(&temp0);
+			SR_CanvasRot90(&temp0);
 			break;
 		case 2:
-			temp1 = SR_CanvasRot180(&temp0);
+			SR_CanvasRot180(&temp0);
 			break;
 		case 3:
-			temp1 = SR_CanvasRot270(&temp0);
+			SR_CanvasRot270(&temp0);
 			break;
 	}
-	SR_DestroyCanvas(&temp0);
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
 	float xshear = -tan(angle / 2) * (h >> 1);
 	float yshear = sin(angle) * (w >> 1);
-	
-	SR_Canvas temp2 = SR_CanvasYShear(&temp1, xshear);
+	SR_Canvas temp1 = SR_CanvasYShear(&temp0, xshear);
+	SR_DestroyCanvas(&temp0);
+	SR_Canvas temp2 = SR_CanvasXShear(&temp1, yshear);
 	SR_DestroyCanvas(&temp1);
-	SR_Canvas temp3 = SR_CanvasXShear(&temp2, yshear);
+	final.canvas = SR_CanvasYShear(&temp2, xshear);
 	SR_DestroyCanvas(&temp2);
-	SR_Canvas temp4 = SR_CanvasYShear(&temp3, xshear);
-	SR_DestroyCanvas(&temp3);
-	final.canvas = SR_CopyCanvas(&temp4, 0, 0, w, h);
-	SR_DestroyCanvas(&temp4);
 	return final;
 }
 
-SR_Canvas SR_CanvasRot90(SR_Canvas *src) {
+void SR_CanvasRot90(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
-	SR_Canvas final = SR_NewCanvas(h, w);
-	for (unsigned short x = 0; x < w; x++) {
-		for (unsigned short y = 0; y < h; y++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, y, w - x, pixel);
+	unsigned short half_w = w >> 1;
+	unsigned short half_h = h >> 1;
+	for (unsigned short x = 0; x < half_w; x++) {
+		for (unsigned short y = 0; y <= half_h; y++) {
+			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
+			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
+			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
+			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
+			SR_CanvasSetPixel(src, y, w - x, pixel0);
+			SR_CanvasSetPixel(src, w - x, h - y, pixel1);
+			SR_CanvasSetPixel(src, h - y, x, pixel2);
+			SR_CanvasSetPixel(src, x, y, pixel3);
 		}
 	}
-	return final;
 }
 
-SR_Canvas SR_CanvasRot180(SR_Canvas *src) {
+void SR_CanvasRot180(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
-	SR_Canvas final = SR_NewCanvas(w, h);
-	for (unsigned short x = 0; x < w; x++) {
-		for (unsigned short y = 0; y < h; y++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, w - x, h - y, pixel);
+	unsigned short half_w = w >> 1;
+	unsigned short half_h = h >> 1;
+	for (unsigned short x = 0; x < half_w; x++) {
+		for (unsigned short y = 0; y <= half_h; y++) {
+			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
+			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
+			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
+			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
+			SR_CanvasSetPixel(src, w - x, h - y, pixel0);
+			SR_CanvasSetPixel(src, h - y, x, pixel1);
+			SR_CanvasSetPixel(src, x, y, pixel2);
+			SR_CanvasSetPixel(src, y, w - x, pixel3);
 		}
 	}
-	return final;
 }
 
-SR_Canvas SR_CanvasRot270(SR_Canvas *src) {
+void SR_CanvasRot270(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
-	SR_Canvas final = SR_NewCanvas(h, w);
-	for (unsigned short x = 0; x < w; x++) {
-		for (unsigned short y = 0; y < h; y++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, h - y, x, pixel);
+	unsigned short half_w = w >> 1;
+	unsigned short half_h = h >> 1;
+	for (unsigned short x = 0; x < half_w; x++) {
+		for (unsigned short y = 0; y <= half_h; y++) {
+			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
+			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
+			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
+			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
+			SR_CanvasSetPixel(src, h - y, x, pixel0);
+			SR_CanvasSetPixel(src, x, y, pixel1);
+			SR_CanvasSetPixel(src, y, w - x, pixel2);
+			SR_CanvasSetPixel(src, w - x, h - y, pixel3);
 		}
 	}
-	return final;
 }
+
+//Private
+/*
+void SR_CanvasXShearPadded(SR_Canvas *src, int skew_amount) {
+	unsigned short xstart = src->width >> 2;
+	unsigned short xend = xstart + src->width >> 1;
+	unsigned short copy_length = src->width << 1;
+	unsigned short ycenter = src->height >> 1;
+	unsigned short ystart = src->height >> 2;
+	unsigned short yend = ystart + ycenter;
+	float skew = (float)skew_amount / (float)ystart;
+	for (unsigned short y = ystart; y < yend; y++) {
+		int xshift = (y - ycenter - ystart) * skew;
+		unsigned long long memory_offset = src->pixels + y * src->width;
+		memcpy(memory_offset + xshift, memory_offset, copy_length);
+	}
+}
+*/
