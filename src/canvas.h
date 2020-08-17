@@ -42,14 +42,12 @@
 
     // Calculate the "real" position of a pixel in the canvas - not really
     // recommended to use this yourself.
-    #define SR_CanvasCalcPosition(canvas, y, x) \
+    #define SR_CanvasCalcPosition(canvas, x, y) \
     ((((unsigned int)((canvas)->width)) * (y)) + (x))
 
     // Check if a pixel is out of bounds
-    bool SR_CanvasCheckOutOfBounds(
-        register SR_Canvas *canvas,
-        register unsigned short x,
-        register unsigned short y);
+    #define SR_CanvasCheckOutOfBounds(canvas, x, y) \
+    (((x) >= (canvas)->width || (y) >= (canvas)->height) ? true : false)
 
     // Set the value of a pixel in the canvas
     __inline__ void SR_CanvasSetPixel(
