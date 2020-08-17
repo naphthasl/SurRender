@@ -297,7 +297,6 @@ SR_RotatedCanvas SR_CanvasRotate(
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
-	final.canvas = SR_NewCanvas(w, h);
 	SR_Canvas temp1;
 	switch (quarter_turns) {
 		case 0:
