@@ -341,3 +341,17 @@ SR_Canvas SR_CanvasRot270(SR_Canvas *src) {
 	}
 	return final;
 }
+
+//Private
+void SR_CanvasXShearPadded(SR_Canvas *src, int skew_amount) {
+	unsigned short xstart = src->width >> 2;
+	unsigned short xend = xstart + src->width >> 1;
+	unsigned short ycenter = src->height >> 1;
+	unsigned short ystart = src->height >> 2;
+	unsigned short yend = ystart + ycenter;
+	float skew = (float)skew_amount / (float)ystart;
+	for (unsigned short y = ystart; y < yend; y++) {
+		int xshift = (y - ycenter - ystart) * skew;
+		//memcpy lol
+	}
+}

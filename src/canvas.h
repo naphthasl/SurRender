@@ -147,4 +147,9 @@
 	SR_Canvas SR_CanvasRot90(SR_Canvas *src);
 	SR_Canvas SR_CanvasRot180(SR_Canvas *src);
 	SR_Canvas SR_CanvasRot270(SR_Canvas *src);
+	
+	// Private in-place padded shear functions for rotation
+	// Willn't malloc a new canvas :3
+	void SR_CanvasXShearPadded(SR_Canvas *src, int skew_amount);
+	void SR_CanvasYShearPadded(SR_Canvas *src, int skew_amount);
 #endif
