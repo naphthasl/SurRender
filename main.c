@@ -51,6 +51,27 @@ int main(void)
     SR_RotatedCanvas rotcanvas;
 	float speeen = 0.0;
 	
+	//look i'm not sure the 90 deg rots are hecking properly
+	//yes i could theoretically just rotate the same tempbox
+	//canvas three times but testing so a9owiu egh9iu TVYWEB 08GE
+	SR_Canvas boxes = SR_NewCanvas(128, 128);
+	SR_ZeroFill(&boxes);
+	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./BOXES.BMP");
+	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./BOXES.BMP");
+	SR_CanvasRotFixed(&tempbox1, 1);
+	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./BOXES.BMP");
+	SR_CanvasRotFixed(&tempbox2, 2);
+	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./BOXES.BMP");
+	SR_CanvasRotFixed(&tempbox3, 3);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0, 80, 40, 255, SR_BLEND_REPLACE);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 40,  0, 255, SR_BLEND_REPLACE);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox2,  0, 40, 255, SR_BLEND_REPLACE);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox3, 40, 80, 255, SR_BLEND_REPLACE);
+	SR_DestroyCanvas(&tempbox0);
+	SR_DestroyCanvas(&tempbox1);
+	SR_DestroyCanvas(&tempbox2);
+	SR_DestroyCanvas(&tempbox3);
+	
     // free(imagetest.pixels); imagetest.pixels = NULL;
 
     if (!SR_CanvasIsValid(&canvy)) {
@@ -172,6 +193,8 @@ event_loop:
         0, 0,
         255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
+    
+    SR_MergeCanvasIntoCanvas(&canvy, &boxes, 300, 300, 255, SR_BLEND_REPLACE);
     
     /* update the canvas here, the rest is
        actually blitting it to the window */
