@@ -233,7 +233,7 @@ SR_Canvas SR_CanvasXShear(
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	unsigned short ycenter = h >> 1;
-	double skew = (double)skew_amount / (double)ycenter;
+	float skew = (float)skew_amount / (float)ycenter;
 	skew_amount = abs(skew_amount);
 	SR_Canvas final = SR_NewCanvas(w, h);
 	SR_ZeroFill(&final);
@@ -254,7 +254,7 @@ SR_Canvas SR_CanvasYShear(
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	unsigned short xcenter = w >> 1;
-	double skew = (double)skew_amount / (double)xcenter;
+	float skew = (float)skew_amount / (float)xcenter;
 	skew_amount = abs(skew_amount);
 	SR_Canvas final = SR_NewCanvas(w, h);
 	SR_ZeroFill(&final);
@@ -270,7 +270,7 @@ SR_Canvas SR_CanvasYShear(
 
 SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas *src,
-	double angle,
+	float angle,
 	bool safety_padding)
 {
 	//magic numbers warning
@@ -317,8 +317,8 @@ SR_RotatedCanvas SR_CanvasRotate(
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
-	double xshear = -tan(angle / 2) * (h >> 1);
-	double yshear = sin(angle) * (w >> 1);
+	float xshear = -tan(angle / 2) * (h >> 1);
+	float yshear = sin(angle) * (w >> 1);
 	
 	SR_Canvas temp2 = SR_CanvasYShear(&temp1, xshear);
 	SR_DestroyCanvas(&temp1);

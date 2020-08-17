@@ -20,9 +20,9 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
-    SR_Canvas imagetest = SR_ImageFileToCanvas("./KRABS_WIDE.BMP");
+    SR_Canvas imagetest = SR_ImageFileToCanvas("./PUCK.BMP");
     SR_RotatedCanvas rotcanvas;
-	double speeen = 0.0;
+	float speeen = 0.0;
 	
     // free(imagetest.pixels); imagetest.pixels = NULL;
 

@@ -124,7 +124,7 @@
 	// Will malloc a new canvas!
 	SR_RotatedCanvas SR_CanvasRotate(
 		SR_Canvas *src,
-		double angle,
+		float angle,
 		bool safety_padding);
 	
 	// Returns a canvas rotated 90, 180, or 270 degrees counter-clockwise
