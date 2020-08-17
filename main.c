@@ -39,7 +39,7 @@ int main(void)
 
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
-    canvy = SR_NewCanvas(640, 480);
+    canvy = SR_NewCanvas(128, 128);
 
     unsigned int times = 65535;
     unsigned long long i = rdtsc();
@@ -144,6 +144,7 @@ event_loop:
         }
     }
 
+    /*
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -185,7 +186,6 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
-	/* the */
 	speeen += .05;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
@@ -193,8 +193,9 @@ event_loop:
         0, 0,
         255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
-    
-    SR_MergeCanvasIntoCanvas(&canvy, &boxes, 300, 300, 255, SR_BLEND_REPLACE);
+    */
+
+    SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_REPLACE);
     
     /* update the canvas here, the rest is
        actually blitting it to the window */
