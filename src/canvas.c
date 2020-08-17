@@ -51,15 +51,6 @@ unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
-bool SR_CanvasCheckOutOfBounds(
-    register SR_Canvas *canvas,
-    register unsigned short x,
-    register unsigned short y)
-{
-    if (x >= canvas->width || y >= canvas->height) return true;
-    else return false;
-}
-
 void SR_DestroyCanvas(SR_Canvas *canvas)
     { if (canvas->pixels) { free(canvas->pixels); canvas->pixels = NULL; } }
 
