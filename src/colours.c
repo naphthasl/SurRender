@@ -30,11 +30,11 @@ SR_RGBAPixel SR_RGBABlender(
 
     if (mode == SR_BLEND_ADDITIVE || mode == SR_BLEND_XOR)
     {
-        float alpha_mul = (
+        register float alpha_mul = (
             ((float)pixel_top.alpha / 255.0) *
             ((float)alpha_modifier / 255.0)
         );
-        float alpha_mul_neg = 1 - alpha_mul;
+        register float alpha_mul_neg = 1 - alpha_mul;
 
         pixel_top.rgb.red   *= alpha_mul;
         pixel_top.rgb.blue  *= alpha_mul;
@@ -45,8 +45,8 @@ SR_RGBAPixel SR_RGBABlender(
         pixel_base.rgb.green *= alpha_mul_neg;
     }
 
-    uint32_t pixel_base_whole = SR_RGBAtoWhole(pixel_base);
-    uint32_t pixel_top_whole  = SR_RGBAtoWhole(pixel_top );
+    register uint32_t pixel_base_whole = SR_RGBAtoWhole(pixel_base);
+    register uint32_t pixel_top_whole  = SR_RGBAtoWhole(pixel_top );
 
     switch (mode)
     {
