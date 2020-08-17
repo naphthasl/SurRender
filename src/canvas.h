@@ -136,10 +136,10 @@
 		bool safety_padding);
 	
 	// Returns a canvas rotated 90, 180, or 270 degrees counter-clockwise
-	// Will malloc a new canvas!
-	SR_Canvas SR_CanvasRot90(SR_Canvas *src);
-	SR_Canvas SR_CanvasRot180(SR_Canvas *src);
-	SR_Canvas SR_CanvasRot270(SR_Canvas *src);
+	// Willn't malloc a new canvas :3
+	void SR_CanvasRot90(SR_Canvas *src);
+	void SR_CanvasRot180(SR_Canvas *src);
+	void SR_CanvasRot270(SR_Canvas *src);
 	
 	// Private in-place padded shear functions for rotation
 	// Willn't malloc a new canvas :3
