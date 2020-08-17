@@ -293,7 +293,6 @@ SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas temp0;
 	unsigned short w = src->width;
 	unsigned short h = src->height;
-	unsigned short largest_dimension = MAX(w, h);
 	SR_RotatedCanvas final;
 	if (safety_padding) {
 		w <<= 1;
@@ -314,8 +313,9 @@ SR_RotatedCanvas SR_CanvasRotate(
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
-	float xshear = -tan(angle / 2) * (h >> 1);
-	float yshear = sin(angle) * (w >> 1);
+	unsigned short sneeze = MAX(w, h) >> 1;
+	float xshear = -tan(angle / 2) * sneeze;
+	float yshear = sin(angle) * sneeze;
 	SR_Canvas temp1 = SR_CanvasYShear(&temp0, xshear);
 	SR_DestroyCanvas(&temp0);
 	SR_Canvas temp2 = SR_CanvasXShear(&temp1, yshear);
