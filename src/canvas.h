@@ -94,9 +94,9 @@
     // Note: This does not destroy the old canvas. If you don't need it anymore
     // don't forget to destroy it, or it will remain allocated.
     SR_Canvas SR_CopyCanvas(
-        SR_Canvas *canvas,
-        unsigned short copy_start_x,
-        unsigned short copy_start_y,
+        register SR_Canvas *canvas,
+        register unsigned short copy_start_x,
+        register unsigned short copy_start_y,
         unsigned short new_width,
         unsigned short new_height);
 

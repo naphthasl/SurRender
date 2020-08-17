@@ -67,9 +67,9 @@ bool SR_CanvasIsValid(SR_Canvas *canvas)
     { return BOOLIFY(canvas->pixels); }
 
 SR_Canvas SR_CopyCanvas(
-    SR_Canvas *canvas,
-    unsigned short copy_start_x,
-    unsigned short copy_start_y,
+    register SR_Canvas *canvas,
+    register unsigned short copy_start_x,
+    register unsigned short copy_start_y,
     unsigned short new_width,
     unsigned short new_height)
 {
@@ -91,7 +91,7 @@ SR_Canvas SR_CopyCanvas(
 
     if (new.pixels)
     {
-        unsigned short x, y;
+        register unsigned short x, y;
         for(x = 0, y = 0; y < canvas->height; x++)
         {
             if(x > canvas->width) { x = 0; y++; }
