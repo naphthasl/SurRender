@@ -25,7 +25,11 @@
         // Replace base alpha with top alpha
         SR_BLEND_DROP,
         // Replace entire top pixel with bottom pixel
-        SR_BLEND_REPLACE
+        SR_BLEND_REPLACE,
+        // Directly XOR the RGB channels without mutating the alpha
+        SR_BLEND_DIRECT_XOR,
+        // Directly XOR EVERYTHING (RGBA) without mutating the alpha
+        SR_BLEND_DIRECT_XOR_ALL
     };
 
     // Construct an RGB colour value.
@@ -50,7 +54,7 @@
 
     // Conversion
     #define SR_RGBAtoRGB(pixel) (pixel.rgb)
-    
+
     __inline__ SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha)
     {
         SR_RGBAPixel temp;

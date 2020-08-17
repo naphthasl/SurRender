@@ -33,6 +33,7 @@ SR_RGBAPixel SR_RGBABlender(
 
     switch (mode)
     {
+        case SR_BLEND_DIRECT_XOR:
         case SR_BLEND_XOR:
             final = pixel_base_whole ^ (pixel_top_whole & 0x00FFFFFF);
 
@@ -69,6 +70,9 @@ SR_RGBAPixel SR_RGBABlender(
         case SR_BLEND_REPLACE:
             final = pixel_top_whole;
 
+            break;
+        case SR_BLEND_DIRECT_XOR_ALL:
+            final = pixel_base_whole ^ pixel_top_whole;
             break;
         default:
             fprintf(stderr, "Invalid blending mode!\n");
