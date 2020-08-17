@@ -75,6 +75,8 @@ SR_Canvas SR_CopyCanvas(
 {
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
+    if (!new.pixels) return new;
+
     if (
         copy_start_x == 0 &&
         copy_start_y == 0 &&
@@ -86,11 +88,7 @@ SR_Canvas SR_CopyCanvas(
             (unsigned int)new.height *
             sizeof(SR_RGBAPixel)
         );
-        return new;
-    }
-
-    if (new.pixels)
-    {
+    } else {
         register unsigned short x, y;
         for(x = 0, y = 0; y < canvas->height; x++)
         {
