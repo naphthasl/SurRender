@@ -51,27 +51,27 @@ unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
-unsigned int __inline__ SR_CanvasCalcPosition(
-    SR_Canvas *canvas,
-    unsigned int x,
-    unsigned int y)
+unsigned int SR_CanvasCalcPosition(
+    register SR_Canvas *canvas,
+    register unsigned int x,
+    register unsigned int y)
 {
     return (((unsigned int)canvas->width) * y) + x;
 }
 
-bool __inline__ SR_CanvasCheckOutOfBounds(
-    SR_Canvas *canvas,
-    unsigned short x,
-    unsigned short y)
+bool SR_CanvasCheckOutOfBounds(
+    register SR_Canvas *canvas,
+    register unsigned short x,
+    register unsigned short y)
 {
     if (x >= canvas->width || y >= canvas->height) return true;
     else return false;
 }
 
-void __inline__ SR_CanvasSetPixel(
+void SR_CanvasSetPixel(
     SR_Canvas *canvas,
-    unsigned short x,
-    unsigned short y,
+    register unsigned short x,
+    register unsigned short y,
     SR_RGBAPixel pixel)
 {
     if (!canvas->pixels) return;
@@ -79,10 +79,10 @@ void __inline__ SR_CanvasSetPixel(
     canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
 }
 
-SR_RGBAPixel __inline__ SR_CanvasGetPixel(
+SR_RGBAPixel SR_CanvasGetPixel(
     SR_Canvas *canvas,
-    unsigned short x,
-    unsigned short y)
+    register unsigned short x,
+    register unsigned short y)
 {
     if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
 

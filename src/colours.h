@@ -29,7 +29,8 @@
     };
 
     // Construct an RGB colour value.
-    SR_RGBPixel SR_CreateRGB(uint8_t red, uint8_t green, uint8_t blue);
+    SR_RGBPixel SR_CreateRGB(
+        uint8_t red, uint8_t green, uint8_t blue);
 
     // Create an RGBA colour value.
     SR_RGBAPixel SR_CreateRGBA(
@@ -50,6 +51,6 @@
     SR_RGBAPixel SR_RGBABlender(
         SR_RGBAPixel pixel_base,
         SR_RGBAPixel pixel_top,
-        uint8_t alpha_modifier,
-        char mode);
+        register uint8_t alpha_modifier,
+        register char mode);
 #endif

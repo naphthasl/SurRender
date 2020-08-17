@@ -31,11 +31,11 @@ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
 SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
     { return *(SR_RGBAPixel *) &pix; }
 
-SR_RGBAPixel __inline__ SR_RGBABlender(
+SR_RGBAPixel SR_RGBABlender(
     SR_RGBAPixel pixel_base,
     SR_RGBAPixel pixel_top,
-    uint8_t alpha_modifier,
-    char mode)
+    register uint8_t alpha_modifier,
+    register char mode)
 {
     // TODO: Make this faster and cleaner. Much faster and cleaner!
 
