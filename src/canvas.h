@@ -105,12 +105,12 @@
     // Uses alpha modifier and mode values just like SR_RGBABlender. Usually
     // you'll just want a modifier of 255 and mode SR_BLEND_ADDITIVE.
     void SR_MergeCanvasIntoCanvas(
-        SR_Canvas *dest_canvas,
-        SR_Canvas *src_canvas,
-        unsigned short paste_start_x,
-        unsigned short paste_start_y,
-        uint8_t alpha_modifier,
-        char mode);
+        register SR_Canvas *dest_canvas,
+        register SR_Canvas *src_canvas,
+        register unsigned short paste_start_x,
+        register unsigned short paste_start_y,
+        register uint8_t alpha_modifier,
+        register char mode);
 
     // Return a scaled up version of a canvas using SR_ScaleModes for the mode.
     // Will malloc a new canvas! You will need to destroy the old one if

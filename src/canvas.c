@@ -103,16 +103,16 @@ SR_Canvas SR_CopyCanvas(
 }
 
 void SR_MergeCanvasIntoCanvas(
-    SR_Canvas *dest_canvas,
-    SR_Canvas *src_canvas,
-    unsigned short paste_start_x,
-    unsigned short paste_start_y,
-    uint8_t alpha_modifier,
-    char mode)
+    register SR_Canvas *dest_canvas,
+    register SR_Canvas *src_canvas,
+    register unsigned short paste_start_x,
+    register unsigned short paste_start_y,
+    register uint8_t alpha_modifier,
+    register char mode)
 {
     // TODO: Add support for rotation
 
-    unsigned short x, y;
+    register unsigned short x, y;
     for(x = 0, y = 0; y < src_canvas->height; x++)
     {
         if(x > src_canvas->width) { x = 0; y++; }
