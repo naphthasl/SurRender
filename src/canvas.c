@@ -51,15 +51,6 @@ unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
-bool SR_CanvasCheckOutOfBounds(
-    register SR_Canvas *canvas,
-    register unsigned short x,
-    register unsigned short y)
-{
-    if (x >= canvas->width || y >= canvas->height) return true;
-    else return false;
-}
-
 void SR_DestroyCanvas(SR_Canvas *canvas)
     { if (canvas->pixels) { free(canvas->pixels); canvas->pixels = NULL; } }
 
@@ -67,17 +58,29 @@ bool SR_CanvasIsValid(SR_Canvas *canvas)
     { return BOOLIFY(canvas->pixels); }
 
 SR_Canvas SR_CopyCanvas(
-    SR_Canvas *canvas,
-    unsigned short copy_start_x,
-    unsigned short copy_start_y,
+    register SR_Canvas *canvas,
+    register unsigned short copy_start_x,
+    register unsigned short copy_start_y,
     unsigned short new_width,
     unsigned short new_height)
 {
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
-    if (new.pixels)
+    if (!new.pixels) return new;
+
+    if (
+        copy_start_x == 0 &&
+        copy_start_y == 0 &&
+        new.width    == canvas->width &&
+        new.height   == canvas->height)
     {
-        unsigned short x, y;
+        memcpy(new.pixels, canvas->pixels,
+            (unsigned int)new.width *
+            (unsigned int)new.height *
+            sizeof(SR_RGBAPixel)
+        );
+    } else {
+        register unsigned short x, y;
         for(x = 0, y = 0; y < canvas->height; x++)
         {
             if(x > canvas->width) { x = 0; y++; }
@@ -91,16 +94,16 @@ SR_Canvas SR_CopyCanvas(
 }
 
 void SR_MergeCanvasIntoCanvas(
-    SR_Canvas *dest_canvas,
-    SR_Canvas *src_canvas,
-    unsigned short paste_start_x,
-    unsigned short paste_start_y,
-    uint8_t alpha_modifier,
-    char mode)
+    register SR_Canvas *dest_canvas,
+    register SR_Canvas *src_canvas,
+    register unsigned short paste_start_x,
+    register unsigned short paste_start_y,
+    register uint8_t alpha_modifier,
+    register char mode)
 {
     // TODO: Add support for rotation
 
-    unsigned short x, y;
+    register unsigned short x, y;
     for(x = 0, y = 0; y < src_canvas->height; x++)
     {
         if(x > src_canvas->width) { x = 0; y++; }

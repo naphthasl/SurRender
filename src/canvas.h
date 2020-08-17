@@ -42,19 +42,12 @@
 
     // Calculate the "real" position of a pixel in the canvas - not really
     // recommended to use this yourself.
-    __inline__ unsigned int SR_CanvasCalcPosition(
-        register SR_Canvas *canvas,
-        register unsigned int x,
-        register unsigned int y)
-    {
-        return (((unsigned int)canvas->width) * y) + x;
-    }
+    #define SR_CanvasCalcPosition(canvas, x, y) \
+    ((((unsigned int)((canvas)->width)) * (y)) + (x))
 
     // Check if a pixel is out of bounds
-    bool SR_CanvasCheckOutOfBounds(
-        register SR_Canvas *canvas,
-        register unsigned short x,
-        register unsigned short y);
+    #define SR_CanvasCheckOutOfBounds(canvas, x, y) \
+    (((x) >= (canvas)->width || (y) >= (canvas)->height) ? true : false)
 
     // Set the value of a pixel in the canvas
     __inline__ void SR_CanvasSetPixel(
@@ -94,9 +87,9 @@
     // Note: This does not destroy the old canvas. If you don't need it anymore
     // don't forget to destroy it, or it will remain allocated.
     SR_Canvas SR_CopyCanvas(
-        SR_Canvas *canvas,
-        unsigned short copy_start_x,
-        unsigned short copy_start_y,
+        register SR_Canvas *canvas,
+        register unsigned short copy_start_x,
+        register unsigned short copy_start_y,
         unsigned short new_width,
         unsigned short new_height);
 
@@ -105,12 +98,12 @@
     // Uses alpha modifier and mode values just like SR_RGBABlender. Usually
     // you'll just want a modifier of 255 and mode SR_BLEND_ADDITIVE.
     void SR_MergeCanvasIntoCanvas(
-        SR_Canvas *dest_canvas,
-        SR_Canvas *src_canvas,
-        unsigned short paste_start_x,
-        unsigned short paste_start_y,
-        uint8_t alpha_modifier,
-        char mode);
+        register SR_Canvas *dest_canvas,
+        register SR_Canvas *src_canvas,
+        register unsigned short paste_start_x,
+        register unsigned short paste_start_y,
+        register uint8_t alpha_modifier,
+        register char mode);
 
     // Return a scaled up version of a canvas using SR_ScaleModes for the mode.
     // Will malloc a new canvas! You will need to destroy the old one if
