@@ -144,7 +144,6 @@ event_loop:
         }
     }
 
-    /*
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -186,14 +185,13 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
-    */
 	/* the */
 	speeen += .05;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),
-        rotcanvas.offset_x, rotcanvas.offset_y,
-        255, SR_BLEND_REPLACE);
+        0, 0,
+        255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
     
     SR_MergeCanvasIntoCanvas(&canvy, &boxes, 300, 300, 255, SR_BLEND_REPLACE);
