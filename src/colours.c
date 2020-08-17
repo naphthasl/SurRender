@@ -1,23 +1,6 @@
 #include "glbl.h"
 #include "colours.h"
 
-SR_RGBPixel SR_RGBAtoRGB(SR_RGBAPixel pixel)
-    { return pixel.rgb; }
-
-SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha)
-{
-    SR_RGBAPixel temp;
-    temp.rgb = pixel;
-    temp.alpha = alpha;
-    return temp;
-}
-
-uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
-    { return *(uint32_t *) &pix; }
-
-SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
-    { return *(SR_RGBAPixel *) &pix; }
-
 SR_RGBAPixel SR_RGBABlender(
     SR_RGBAPixel pixel_base,
     SR_RGBAPixel pixel_top,

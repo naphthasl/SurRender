@@ -49,10 +49,21 @@
     }
 
     // Conversion
-    SR_RGBPixel SR_RGBAtoRGB(SR_RGBAPixel pixel);
-    SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha);
-    uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix);
-    SR_RGBAPixel SR_WholetoRGBA(uint32_t pix);
+    #define SR_RGBAtoRGB(pixel) (pixel.rgb)
+    
+    __inline__ SR_RGBAPixel SR_RGBtoRGBA(SR_RGBPixel pixel, uint8_t alpha)
+    {
+        SR_RGBAPixel temp;
+        temp.rgb = pixel;
+        temp.alpha = alpha;
+        return temp;
+    }
+
+    __inline__ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
+        { return *(uint32_t *) &pix; }
+
+    __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
+        { return *(SR_RGBAPixel *) &pix; }
 
     // Blend RGBA values
     // Use mode provided by SR_BlendingModes

@@ -5,4 +5,5 @@ git switch master
 git pull
 make
 cd ../
+rm -v ./src/*.o
 make
