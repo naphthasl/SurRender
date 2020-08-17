@@ -335,7 +335,6 @@ SR_Canvas SR_CanvasRot90(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	SR_Canvas final = SR_NewCanvas(h, w);
-	SR_ZeroFill(&final);
 	for (unsigned short x = 0; x < w; x++) {
 		for (unsigned short y = 0; y < h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
@@ -349,7 +348,6 @@ SR_Canvas SR_CanvasRot180(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	SR_Canvas final = SR_NewCanvas(w, h);
-	SR_ZeroFill(&final);
 	for (unsigned short x = 0; x < w; x++) {
 		for (unsigned short y = 0; y < h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
@@ -363,7 +361,6 @@ SR_Canvas SR_CanvasRot270(SR_Canvas *src) {
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	SR_Canvas final = SR_NewCanvas(h, w);
-	SR_ZeroFill(&final);
 	for (unsigned short x = 0; x < w; x++) {
 		for (unsigned short y = 0; y < h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
