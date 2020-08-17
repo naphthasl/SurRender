@@ -39,12 +39,12 @@ SR_Canvas LD_STBICanv(uint8_t *image, int *x, int *y)
 
 SR_Canvas SR_ImageMemToCanvas(RadixMemoryBlob image)
 {
-    int x, y, n;
+    int x, y, n = 0;
     return LD_STBICanv(LD_Blob_STBI(image, &x, &y, &n), &x, &y);
 }
 
 SR_Canvas SR_ImageFileToCanvas(char *filename)
 {
-    int x, y, n;
+    int x, y, n = 0;
     return LD_STBICanv(stbi_load(filename, &x, &y, &n, 4), &x, &y);
 }
