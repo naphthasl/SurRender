@@ -35,10 +35,10 @@
     SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height);
 
     // Get the width of a canvas
-    unsigned short __inline__ SR_CanvasGetWidth(SR_Canvas *canvas);
+    unsigned short SR_CanvasGetWidth(SR_Canvas *canvas);
 
     // Get the height of a canvas
-    unsigned short __inline__ SR_CanvasGetHeight(SR_Canvas *canvas);
+    unsigned short SR_CanvasGetHeight(SR_Canvas *canvas);
 
     // Calculate the "real" position of a pixel in the canvas - not really
     // recommended to use this yourself.
@@ -48,20 +48,20 @@
         register unsigned int y);
 
     // Check if a pixel is out of bounds
-    bool __inline__ SR_CanvasCheckOutOfBounds(
+    bool SR_CanvasCheckOutOfBounds(
         register SR_Canvas *canvas,
         register unsigned short x,
         register unsigned short y);
 
     // Set the value of a pixel in the canvas
-    void __inline__ SR_CanvasSetPixel(
+    void SR_CanvasSetPixel(
         SR_Canvas *canvas,
         register unsigned short x,
         register unsigned short y,
         SR_RGBAPixel pixel);
 
     // Get the value of a pixel in the canvas
-    SR_RGBAPixel __inline__ SR_CanvasGetPixel(
+    SR_RGBAPixel SR_CanvasGetPixel(
         SR_Canvas *canvas,
         register unsigned short x,
         register unsigned short y);
