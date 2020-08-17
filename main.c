@@ -80,7 +80,7 @@ int main(void)
     }
 
     if (!(win = SDL_CreateWindow(
-        "SurRender demo by rodger",
+        "SurRender your secrets to zoidberg",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         canvy.width,
