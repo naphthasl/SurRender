@@ -243,6 +243,44 @@ SR_Canvas SR_CanvasYShear(
 	return final;
 }
 
+void SR_CanvasRotFixed(SR_Canvas *src, char quarter_turn) {
+    quarter_turn %= 4; // Only four possibilities
+
+    if (!quarter_turn) return; // 0 degree rotation lol
+
+	unsigned short w = src->width;
+	unsigned short h = src->height;
+	for (unsigned short x = 0; x < (w >> 1); x++) {
+		for (unsigned short y = 0; y <= (h >> 1); y++) {
+			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
+			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
+			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
+			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
+            switch (quarter_turn)
+            {
+                case 1:
+                    SR_CanvasSetPixel(src, y, w - x, pixel0);
+                    SR_CanvasSetPixel(src, w - x, h - y, pixel1);
+                    SR_CanvasSetPixel(src, h - y, x, pixel2);
+                    SR_CanvasSetPixel(src, x, y, pixel3);
+                    break;
+                case 2:
+                    SR_CanvasSetPixel(src, w - x, h - y, pixel0);
+                    SR_CanvasSetPixel(src, h - y, x, pixel1);
+                    SR_CanvasSetPixel(src, x, y, pixel2);
+                    SR_CanvasSetPixel(src, y, w - x, pixel3);
+                    break;
+                case 3:
+                    SR_CanvasSetPixel(src, h - y, x, pixel0);
+                    SR_CanvasSetPixel(src, x, y, pixel1);
+                    SR_CanvasSetPixel(src, y, w - x, pixel2);
+                    SR_CanvasSetPixel(src, w - x, h - y, pixel3);
+                    break;
+            }
+		}
+	}
+}
+
 SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas *src,
 	float angle,
@@ -272,17 +310,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
-	switch (quarter_turns) {
-		case 1:
-			SR_CanvasRot90(&temp0);
-			break;
-		case 2:
-			SR_CanvasRot180(&temp0);
-			break;
-		case 3:
-			SR_CanvasRot270(&temp0);
-			break;
-	}
+	SR_CanvasRotFixed(&temp0, quarter_turns);
 	
 	//modulo by pi/2
 	angle = fmod(angle, 1.57079632679);
@@ -295,63 +323,6 @@ SR_RotatedCanvas SR_CanvasRotate(
 	final.canvas = SR_CanvasYShear(&temp2, xshear);
 	SR_DestroyCanvas(&temp2);
 	return final;
-}
-
-void SR_CanvasRot90(SR_Canvas *src) {
-	unsigned short w = src->width;
-	unsigned short h = src->height;
-	unsigned short half_w = w >> 1;
-	unsigned short half_h = h >> 1;
-	for (unsigned short x = 0; x < half_w; x++) {
-		for (unsigned short y = 0; y <= half_h; y++) {
-			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
-			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
-			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
-			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
-			SR_CanvasSetPixel(src, y, w - x, pixel0);
-			SR_CanvasSetPixel(src, w - x, h - y, pixel1);
-			SR_CanvasSetPixel(src, h - y, x, pixel2);
-			SR_CanvasSetPixel(src, x, y, pixel3);
-		}
-	}
-}
-
-void SR_CanvasRot180(SR_Canvas *src) {
-	unsigned short w = src->width;
-	unsigned short h = src->height;
-	unsigned short half_w = w >> 1;
-	unsigned short half_h = h >> 1;
-	for (unsigned short x = 0; x < half_w; x++) {
-		for (unsigned short y = 0; y <= half_h; y++) {
-			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
-			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
-			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
-			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
-			SR_CanvasSetPixel(src, w - x, h - y, pixel0);
-			SR_CanvasSetPixel(src, h - y, x, pixel1);
-			SR_CanvasSetPixel(src, x, y, pixel2);
-			SR_CanvasSetPixel(src, y, w - x, pixel3);
-		}
-	}
-}
-
-void SR_CanvasRot270(SR_Canvas *src) {
-	unsigned short w = src->width;
-	unsigned short h = src->height;
-	unsigned short half_w = w >> 1;
-	unsigned short half_h = h >> 1;
-	for (unsigned short x = 0; x < half_w; x++) {
-		for (unsigned short y = 0; y <= half_h; y++) {
-			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
-			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
-			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
-			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
-			SR_CanvasSetPixel(src, h - y, x, pixel0);
-			SR_CanvasSetPixel(src, x, y, pixel1);
-			SR_CanvasSetPixel(src, y, w - x, pixel2);
-			SR_CanvasSetPixel(src, w - x, h - y, pixel3);
-		}
-	}
 }
 
 //Private
