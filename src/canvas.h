@@ -58,7 +58,7 @@
 
     // Set the value of a pixel in the canvas
     __inline__ void SR_CanvasSetPixel(
-        SR_Canvas *canvas,
+        register SR_Canvas *canvas,
         register unsigned short x,
         register unsigned short y,
         SR_RGBAPixel pixel)

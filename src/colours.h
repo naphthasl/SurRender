@@ -30,17 +30,19 @@
 
     // Construct an RGB colour value.
     __inline__ SR_RGBPixel SR_CreateRGB(
-        uint8_t red, uint8_t green, uint8_t blue)
+        register uint8_t red,
+        register uint8_t green,
+        register uint8_t blue)
     {
         SR_RGBPixel temp = {red, green, blue}; return temp;
     }
 
     // Create an RGBA colour value.
     __inline__ SR_RGBAPixel SR_CreateRGBA(
-        uint8_t red,
-        uint8_t green,
-        uint8_t blue,
-        uint8_t alpha)
+        register uint8_t red,
+        register uint8_t green,
+        register uint8_t blue,
+        register uint8_t alpha)
     {
         SR_RGBAPixel temp = {{red, green, blue}, alpha};
         return temp;
