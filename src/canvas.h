@@ -42,10 +42,13 @@
 
     // Calculate the "real" position of a pixel in the canvas - not really
     // recommended to use this yourself.
-    unsigned int SR_CanvasCalcPosition(
+    __inline__ unsigned int SR_CanvasCalcPosition(
         register SR_Canvas *canvas,
         register unsigned int x,
-        register unsigned int y);
+        register unsigned int y)
+    {
+        return (((unsigned int)canvas->width) * y) + x;
+    }
 
     // Check if a pixel is out of bounds
     bool SR_CanvasCheckOutOfBounds(
@@ -54,17 +57,29 @@
         register unsigned short y);
 
     // Set the value of a pixel in the canvas
-    void SR_CanvasSetPixel(
+    __inline__ void SR_CanvasSetPixel(
         SR_Canvas *canvas,
         register unsigned short x,
         register unsigned short y,
-        SR_RGBAPixel pixel);
+        SR_RGBAPixel pixel)
+    {
+        if (!canvas->pixels) return;
+        x %= canvas->width; y %= canvas->height;
+        canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
+    }
 
-    // Get the value of a pixel in the canvas
-    SR_RGBAPixel SR_CanvasGetPixel(
+    // Get a pixel in the canvas
+    __inline__ SR_RGBAPixel SR_CanvasGetPixel(
         SR_Canvas *canvas,
         register unsigned short x,
-        register unsigned short y);
+        register unsigned short y)
+    {
+        if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
+
+        x %= canvas->width; y %= canvas->height;
+
+        return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
+    }
 
     // Destroy the in-memory representation of the canvas
     // (Must create a new canvas or resize the current one in order to access)
