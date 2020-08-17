@@ -130,9 +130,9 @@ float blerp(float c00, float c10, float c01, float c11, float tx, float ty)
 
 // Private
 SR_Canvas SR_BilinearCanvasScale(
-    SR_Canvas *src,
-    unsigned short newWidth,
-    unsigned short newHeight)
+    register SR_Canvas *src,
+    register unsigned short newWidth,
+    register unsigned short newHeight)
 {
     SR_Canvas dest = SR_NewCanvas(newWidth, newHeight);
 
