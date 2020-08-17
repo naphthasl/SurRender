@@ -247,7 +247,7 @@ void SR_CanvasRotFixed(SR_Canvas *src, char quarter_turn) {
 	register unsigned short w = src->width;
 	register unsigned short h = src->height;
     register unsigned short x, y;
-    for (x = 0; x < (w >> 1); x++)
+    for (x = 0; x <= (w >> 1); x++)
     {
         for (y = 0; y < (h >> 1); y++)
         {
