@@ -75,6 +75,20 @@ SR_Canvas SR_CopyCanvas(
 {
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
+    if (
+        copy_start_x == 0 &&
+        copy_start_y == 0 &&
+        new.width    == canvas->width &&
+        new.height   == canvas->height)
+    {
+        memcpy(new.pixels, canvas->pixels,
+            (unsigned int)new.width *
+            (unsigned int)new.height *
+            sizeof(SR_RGBAPixel)
+        );
+        return new;
+    }
+
     if (new.pixels)
     {
         unsigned short x, y;
