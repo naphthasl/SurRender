@@ -252,28 +252,28 @@ void SR_CanvasRotFixed(SR_Canvas *src, char quarter_turn) {
 	unsigned short h = src->height;
 	for (unsigned short x = 0; x < (w >> 1); x++) {
 		for (unsigned short y = 0; y <= (h >> 1); y++) {
-			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src, x, y);
-			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src, y, w - x);
+			SR_RGBAPixel pixel0 = SR_CanvasGetPixel(src,     x,     y);
+			SR_RGBAPixel pixel1 = SR_CanvasGetPixel(src,     y, w - x);
 			SR_RGBAPixel pixel2 = SR_CanvasGetPixel(src, w - x, h - y);
-			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y, x);
+			SR_RGBAPixel pixel3 = SR_CanvasGetPixel(src, h - y,     x);
             switch (quarter_turn)
             {
                 case 1:
-                    SR_CanvasSetPixel(src, y, w - x, pixel0);
+                    SR_CanvasSetPixel(src,     y, w - x, pixel0);
                     SR_CanvasSetPixel(src, w - x, h - y, pixel1);
-                    SR_CanvasSetPixel(src, h - y, x, pixel2);
-                    SR_CanvasSetPixel(src, x, y, pixel3);
+                    SR_CanvasSetPixel(src, h - y,     x, pixel2);
+                    SR_CanvasSetPixel(src,     x,     y, pixel3);
                     break;
                 case 2:
                     SR_CanvasSetPixel(src, w - x, h - y, pixel0);
-                    SR_CanvasSetPixel(src, h - y, x, pixel1);
-                    SR_CanvasSetPixel(src, x, y, pixel2);
-                    SR_CanvasSetPixel(src, y, w - x, pixel3);
+                    SR_CanvasSetPixel(src, h - y,     x, pixel1);
+                    SR_CanvasSetPixel(src,     x,     y, pixel2);
+                    SR_CanvasSetPixel(src,     y, w - x, pixel3);
                     break;
                 case 3:
-                    SR_CanvasSetPixel(src, h - y, x, pixel0);
-                    SR_CanvasSetPixel(src, x, y, pixel1);
-                    SR_CanvasSetPixel(src, y, w - x, pixel2);
+                    SR_CanvasSetPixel(src, h - y,     x, pixel0);
+                    SR_CanvasSetPixel(src,     x,     y, pixel1);
+                    SR_CanvasSetPixel(src,     y, w - x, pixel2);
                     SR_CanvasSetPixel(src, w - x, h - y, pixel3);
                     break;
             }
