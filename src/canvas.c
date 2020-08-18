@@ -244,7 +244,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 	float degrees,
 	bool safety_padding)
 {
-    degrees = 360 - fmod(degrees, 360);
+    degrees = fmod(degrees, 360);
 
 	SR_Canvas temp;
 	unsigned short w = src->width;
