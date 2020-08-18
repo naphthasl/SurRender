@@ -57,7 +57,7 @@
         SR_RGBAPixel pixel)
     {
         if (!canvas->pixels) return;
-        
+
         canvas->pixels[
             SR_CanvasCalcPosition(
                 canvas, x % canvas->width, y % canvas->height
@@ -140,4 +140,8 @@
 		SR_Canvas *src,
 		float angle,
 		bool safety_padding);
+
+    // Flip the target canvas - does not malloc, works in-place.
+    void SR_VerticalFlipCanvas(SR_Canvas *src);
+    void SR_HorizontalFlipCanvas(SR_Canvas *src);
 #endif
