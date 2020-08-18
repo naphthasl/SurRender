@@ -287,7 +287,6 @@ SR_RotatedCanvas SR_CanvasRotate(
                 switch ((unsigned short)degrees % 360)
                 {
                     case 90:
-
                         nx = (h - 1) - y;
                         ny = x;
                         break;
