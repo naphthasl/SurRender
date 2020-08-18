@@ -241,54 +241,101 @@ SR_Canvas SR_CanvasYShear(
 
 SR_RotatedCanvas SR_CanvasRotate(
 	SR_Canvas *src,
-	float angle,
+	float degrees,
 	bool safety_padding)
 {
-	//magic numbers warning
-	//modulo by 2pi
-	angle = fmod(angle, 6.28318530718);
 	SR_Canvas temp;
 	unsigned short w = src->width;
 	unsigned short h = src->height;
+
 	SR_RotatedCanvas final;
-	
 	if (safety_padding) {
-		w <<= 1;
-		h <<= 1;
-		temp = SR_NewCanvas(w, h);
-		SR_ZeroFill(&temp);
-		SR_MergeCanvasIntoCanvas(
-			&temp, src, w >> 2, h >> 2,
-			255, SR_BLEND_REPLACE);
-		final.offset_x = -(int)(w >> 2);
-		final.offset_y = -(int)(h >> 2);
+        unsigned short boundary = MAX(w, h) << 1;
+        final.canvas = SR_NewCanvas(boundary, boundary);
+		final.offset_x = -(int)(boundary >> 2);
+		final.offset_y = -(int)(boundary >> 2);
 	} else {
-		temp = *src;
+        final.canvas = SR_NewCanvas(w, h);
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
-	
-	final.canvas = SR_NewCanvas(w, h);
-	float the_sin = sin(angle);
-	float the_cos = cos(angle);
+    SR_ZeroFill(&(final.canvas));
+
+    if (fmod(degrees, 90) == .0)
+    {
+        if (!((unsigned short)degrees % 360))
+        {
+            SR_MergeCanvasIntoCanvas(
+                &final.canvas,
+                src,
+                -final.offset_x,
+                -final.offset_y,
+                255,
+                SR_BLEND_REPLACE
+            );
+
+            return final;
+        }
+
+        register unsigned short x, y;
+        for (x = 0; x < w; x++)
+        {
+            for (y = 0; y < h; y++)
+            {
+                SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
+                unsigned short nx, ny;
+                switch ((unsigned short)degrees % 360)
+                {
+                    case 90:
+                        nx = (w - 1) - x;
+                        ny = y;
+                        break;
+                    case 180:
+                        nx = (w - 1) - x;
+                        ny = (h - 1) - y;
+                        break;
+                    case 270:
+                        nx = x;
+                        ny = (h - 1) - y;
+                        break;
+                }
+
+                SR_CanvasSetPixel(
+                    &final.canvas,
+                    nx - final.offset_x,
+                    ny - final.offset_y,
+                    pixbuf
+                );
+            }
+        }
+
+        return final;
+    }
+
+    // Secretly convert to radians :)
+    degrees *= 0.017453292519943295;
+	//magic numbers warning
+	//modulo by 2pi
+	degrees = fmod(degrees, 6.28318530718);
+
+	float the_sin = sin(degrees);
+	float the_cos = cos(degrees);
 	int half_w = w >> 1;
 	int half_h = h >> 1;
 	
 	for (int x = -half_w; x < half_w; x++) {
 		for (int y = -half_h; y < half_h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(
-				&temp,
+				src,
 				x + half_w, 
 				y + half_h);
 			SR_CanvasSetPixel(
 				&(final.canvas),
-				x * the_cos + y * the_sin + half_w,
-				y * the_cos - x * the_sin + half_h,
+				(x * the_cos + y * the_sin + half_w) - final.offset_x,
+				(y * the_cos - x * the_sin + half_h) - final.offset_y,
 				pixel);
 		}
 	}
-
-    if (safety_padding) SR_DestroyCanvas(&temp);
 	return final;
 }
 

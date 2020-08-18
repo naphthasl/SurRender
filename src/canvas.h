@@ -138,7 +138,7 @@
 	// Will malloc a new canvas!
 	SR_RotatedCanvas SR_CanvasRotate(
 		SR_Canvas *src,
-		float angle,
+		float degrees,
 		bool safety_padding);
 
     // Flip the target canvas - does not malloc, works in-place.

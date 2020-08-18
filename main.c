@@ -48,7 +48,7 @@ int main(void)
         SR_CanvasSetPixel(&canvy, times, times, SR_CreateRGBA(0, 0, 0, 255));
     printf("Set Pixel Ticks: %llu\n", rdtsc() - i);
 
-    SR_Canvas imagetest = SR_ImageFileToCanvas("./PUCK.BMP");
+    SR_Canvas imagetest = SR_ImageFileToCanvas("./KRABS_WIDE.BMP");
     SR_RotatedCanvas rotcanvas;
 	float speeen = 0.0;
 	
@@ -57,17 +57,18 @@ int main(void)
 	//canvas three times but testing so SKDJKALDFJB Goa hgasoiugha
 	SR_Canvas boxes = SR_NewCanvas(128, 128);
 	SR_ZeroFill(&boxes);
-	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./QB.BMP");
-	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./QB.BMP");
-	tempbox1 = SR_CanvasRotate(&tempbox1, 1.570796, 0).canvas;
-	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./QB.BMP");
-	tempbox2 = SR_CanvasRotate(&tempbox2, 3.141593, 0).canvas;
-	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./QB.BMP");
-	tempbox3 = SR_CanvasRotate(&tempbox3, 4.712389, 0).canvas;
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0, 82, 42, 255, SR_BLEND_REPLACE);
+    char filename[] = "TEST_SM.BMP";
+	SR_Canvas tempbox0 = SR_ImageFileToCanvas(filename);
+	SR_Canvas tempbox1 = SR_ImageFileToCanvas(filename);
+	tempbox1 = SR_CanvasRotate(&tempbox1, 90, 0).canvas;
+	SR_Canvas tempbox2 = SR_ImageFileToCanvas(filename);
+	tempbox2 = SR_CanvasRotate(&tempbox2, 180, 0).canvas;
+	SR_Canvas tempbox3 = SR_ImageFileToCanvas(filename);
+	tempbox3 = SR_CanvasRotate(&tempbox3, 270, 0).canvas;
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0,  2,  2, 255, SR_BLEND_REPLACE);
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox2,  2, 42, 255, SR_BLEND_REPLACE);
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox3, 42, 82, 255, SR_BLEND_REPLACE);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox2, 82,  2, 255, SR_BLEND_REPLACE);
+	SR_MergeCanvasIntoCanvas(&boxes, &tempbox3,  2, 42, 255, SR_BLEND_REPLACE);
 	SR_DestroyCanvas(&tempbox0);
 	SR_DestroyCanvas(&tempbox1);
 	SR_DestroyCanvas(&tempbox2);
@@ -188,7 +189,7 @@ event_loop:
         rand() % (canvy.height)
     );
     */
-	speeen += .01;
+	speeen += 1;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),
@@ -196,7 +197,7 @@ event_loop:
         255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
 
-    SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_REPLACE);
+    SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_ADDITIVE);
     
     /* update the canvas here, the rest is
        actually blitting it to the window */
