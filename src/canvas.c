@@ -287,16 +287,17 @@ SR_RotatedCanvas SR_CanvasRotate(
                 switch ((unsigned short)degrees % 360)
                 {
                     case 90:
-                        nx = y;
-                        ny = (w - 1) - x;
+
+                        nx = (h - 1) - y;
+                        ny = x;
                         break;
                     case 180:
                         nx = (w - 1) - x;
                         ny = (h - 1) - y;
                         break;
                     case 270:
-                        nx = (h - 1) - y;
-                        ny = x;
+                        nx = y;
+                        ny = (w - 1) - x;
                         break;
                 }
 
@@ -318,7 +319,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 	//modulo by 2pi
 	degrees = fmod(degrees, 6.28318530718);
 
-	float the_sin = sin(degrees);
+	float the_sin = -sin(degrees);
 	float the_cos = cos(degrees);
 	int half_w = w >> 1;
 	int half_h = h >> 1;
