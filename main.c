@@ -56,12 +56,12 @@ int main(void)
 	//canvas three times but testing so a9owiu egh9iu TVYWEB 08GE
 	SR_Canvas boxes = SR_NewCanvas(128, 128);
 	SR_ZeroFill(&boxes);
-	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./QB.BMP");
-	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./QB.BMP");
+	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./TEST_SM.BMP");
+	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./TEST_SM.BMP");
 	SR_CanvasRotFixed(&tempbox1, 1);
-	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./QB.BMP");
+	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./TEST_SM.BMP");
 	SR_CanvasRotFixed(&tempbox2, 2);
-	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./QB.BMP");
+	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./TEST_SM.BMP");
 	SR_CanvasRotFixed(&tempbox3, 3);
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0, 82, 42, 255, SR_BLEND_REPLACE);
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
