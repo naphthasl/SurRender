@@ -285,13 +285,13 @@ void SR_CanvasRotFixed(SR_Canvas *src, register char quarter_turn)
             switch (quarter_turn)
             {
                 case 1: // 90 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, w - x, h - y);
+                    destination = SR_CanvasCalcPosition(src,     y, w - x);
                     break;
                 case 2: // 180 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, w - x, y);
+					destination = SR_CanvasCalcPosition(src, w - x, h - y);
                     break;
                 case 3: // 270 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, x, h - y);
+                    destination = SR_CanvasCalcPosition(src, h - y,     x);
                     break;
             }
 
@@ -308,57 +308,48 @@ SR_RotatedCanvas SR_CanvasRotate(
 {
 	//magic numbers warning
 	//modulo by 2pi
-	//multiply by 2/pi, same as dividing by pi/2
-	char quarter_turns = floor(fmod(angle, 6.28318530718) * 0.636619772368);
-	SR_Canvas temp0;
+	angle = fmod(angle, 6.28318530718);
+	SR_Canvas temp;
 	unsigned short w = src->width;
 	unsigned short h = src->height;
 	SR_RotatedCanvas final;
+	
 	if (safety_padding) {
 		w <<= 1;
 		h <<= 1;
-		temp0 = SR_NewCanvas(w, h);
-		SR_ZeroFill(&temp0);
+		temp = SR_NewCanvas(w, h);
+		SR_ZeroFill(&temp);
 		SR_MergeCanvasIntoCanvas(
-			&temp0, src, w >> 2, h >> 2,
+			&temp, src, w >> 2, h >> 2,
 			255, SR_BLEND_REPLACE);
 		final.offset_x = -(int)(w >> 2);
 		final.offset_y = -(int)(h >> 2);
 	} else {
-		temp0 = SR_CopyCanvas(src, 0, 0, w, h);
+		temp = SR_CopyCanvas(src, 0, 0, w, h);
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
-	SR_CanvasRotFixed(&temp0, quarter_turns);
 	
-	//modulo by pi/2
-	angle = fmod(angle, 1.57079632679);
-	unsigned short sneeze = MAX(w, h) >> 1;
-	float xshear = -tan(angle / 2) * sneeze;
-	float yshear = sin(angle) * sneeze;
-	SR_Canvas temp1 = SR_CanvasYShear(&temp0, xshear);
-	SR_DestroyCanvas(&temp0);
-	SR_Canvas temp2 = SR_CanvasXShear(&temp1, yshear);
-	SR_DestroyCanvas(&temp1);
-	final.canvas = SR_CanvasYShear(&temp2, xshear);
-	SR_DestroyCanvas(&temp2);
+	float the_sin = sin(angle);
+	float the_cos = cos(angle);
+	int half_w = w >> 1;
+	int half_h = h >> 1;
+	
+	for (unsigned short x = -half_w; x < half_w; x++) {
+		for (unsigned short y = -half_h; y < half_h; y++) {
+			SR_RGBAPixel pixel = SR_CanvasGetPixel(
+				&temp,
+				x + half_w, 
+				y + half_h);
+			SR_CanvasSetPixel(
+				&(final.canvas),
+				x * the_cos + y * the_sin + half_w,
+				y * the_cos - x * the_sin + half_h,
+				pixel);
+		}
+	}
+	
+	final.canvas = SR_CopyCanvas(&temp, 0, 0, w, h);
+	SR_DestroyCanvas(&temp);
 	return final;
 }
-
-//Private
-/*
-void SR_CanvasXShearPadded(SR_Canvas *src, int skew_amount) {
-	unsigned short xstart = src->width >> 2;
-	unsigned short xend = xstart + src->width >> 1;
-	unsigned short copy_length = src->width << 1;
-	unsigned short ycenter = src->height >> 1;
-	unsigned short ystart = src->height >> 2;
-	unsigned short yend = ystart + ycenter;
-	float skew = (float)skew_amount / (float)ystart;
-	for (unsigned short y = ystart; y < yend; y++) {
-		int xshift = (y - ycenter - ystart) * skew;
-		unsigned long long memory_offset = src->pixels + y * src->width;
-		memcpy(memory_offset + xshift, memory_offset, copy_length);
-	}
-}
-*/

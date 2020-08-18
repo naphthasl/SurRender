@@ -53,7 +53,7 @@ int main(void)
 	
 	//look i'm not sure the 90 deg rots are hecking properly
 	//yes i could theoretically just rotate the same tempbox
-	//canvas three times but testing so a9owiu egh9iu TVYWEB 08GE
+	//canvas three times but testing so SKDJKALDFJB Goa hgasoiugha
 	SR_Canvas boxes = SR_NewCanvas(128, 128);
 	SR_ZeroFill(&boxes);
 	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./TEST_SM.BMP");
