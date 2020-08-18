@@ -285,13 +285,13 @@ void SR_CanvasRotFixed(SR_Canvas *src, register char quarter_turn)
             switch (quarter_turn)
             {
                 case 1: // 90 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, w - x, h - y);
+                    destination = SR_CanvasCalcPosition(src,     y, w - x);
                     break;
                 case 2: // 180 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, w - x, y);
+					destination = SR_CanvasCalcPosition(src, w - x, h - y);
                     break;
                 case 3: // 270 degree rotation.
-                    destination = SR_CanvasCalcPosition(src, x, h - y);
+                    destination = SR_CanvasCalcPosition(src, h - y,     x);
                     break;
             }
 
