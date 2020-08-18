@@ -39,8 +39,8 @@ int main(void)
 
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
-    canvy = SR_NewCanvas(640, 480);
-    SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 640, 480);
+    canvy = SR_NewCanvas(1366, 768);
+    SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 1366, 768);
 
     unsigned int times = 65535;
     unsigned long long i = rdtsc();

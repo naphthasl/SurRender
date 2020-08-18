@@ -263,7 +263,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 		final.offset_x = -(int)(w >> 2);
 		final.offset_y = -(int)(h >> 2);
 	} else {
-		temp = SR_CopyCanvas(src, 0, 0, w, h);
+		temp = *src;
 		final.offset_x = 0;
 		final.offset_y = 0;
 	}
@@ -287,6 +287,7 @@ SR_RotatedCanvas SR_CanvasRotate(
 				pixel);
 		}
 	}
-	SR_DestroyCanvas(&temp);
+
+    if (safety_padding) SR_DestroyCanvas(&temp);
 	return final;
 }
