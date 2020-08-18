@@ -330,13 +330,14 @@ SR_RotatedCanvas SR_CanvasRotate(
 		final.offset_y = 0;
 	}
 	
+	final.canvas = SR_NewCanvas(w, h);
 	float the_sin = sin(angle);
 	float the_cos = cos(angle);
 	int half_w = w >> 1;
 	int half_h = h >> 1;
 	
-	for (unsigned short x = -half_w; x < half_w; x++) {
-		for (unsigned short y = -half_h; y < half_h; y++) {
+	for (int x = -half_w; x < half_w; x++) {
+		for (int y = -half_h; y < half_h; y++) {
 			SR_RGBAPixel pixel = SR_CanvasGetPixel(
 				&temp,
 				x + half_w, 
@@ -348,8 +349,6 @@ SR_RotatedCanvas SR_CanvasRotate(
 				pixel);
 		}
 	}
-	
-	final.canvas = SR_CopyCanvas(&temp, 0, 0, w, h);
 	SR_DestroyCanvas(&temp);
 	return final;
 }
