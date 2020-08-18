@@ -40,6 +40,7 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(640, 480);
+    SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 640, 480);
 
     unsigned int times = 65535;
     unsigned long long i = rdtsc();
@@ -56,13 +57,13 @@ int main(void)
 	//canvas three times but testing so SKDJKALDFJB Goa hgasoiugha
 	SR_Canvas boxes = SR_NewCanvas(128, 128);
 	SR_ZeroFill(&boxes);
-	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./TEST_SM.BMP");
-	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./TEST_SM.BMP");
-	SR_CanvasRotFixed(&tempbox1, 1);
-	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./TEST_SM.BMP");
-	SR_CanvasRotFixed(&tempbox2, 2);
-	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./TEST_SM.BMP");
-	SR_CanvasRotFixed(&tempbox3, 3);
+	SR_Canvas tempbox0 = SR_ImageFileToCanvas("./QB.BMP");
+	SR_Canvas tempbox1 = SR_ImageFileToCanvas("./QB.BMP");
+	tempbox1 = SR_CanvasRotate(&tempbox1, 1.570796, 0).canvas;
+	SR_Canvas tempbox2 = SR_ImageFileToCanvas("./QB.BMP");
+	tempbox2 = SR_CanvasRotate(&tempbox2, 3.141593, 0).canvas;
+	SR_Canvas tempbox3 = SR_ImageFileToCanvas("./QB.BMP");
+	tempbox3 = SR_CanvasRotate(&tempbox3, 4.712389, 0).canvas;
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0, 82, 42, 255, SR_BLEND_REPLACE);
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
 	SR_MergeCanvasIntoCanvas(&boxes, &tempbox2,  2, 42, 255, SR_BLEND_REPLACE);
@@ -144,6 +145,7 @@ event_loop:
         }
     }
 
+    /*
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -185,7 +187,8 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
-	speeen += .05;
+    */
+	speeen += .01;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),
