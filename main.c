@@ -30,7 +30,7 @@ int main(void)
 
     float aspect_ratio;
 
-    /* needed for blitting */
+    /* needed for blitting */   
     SDL_Surface *wsurf, *canvysurf;
     SDL_Rect destrect;
 

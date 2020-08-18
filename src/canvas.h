@@ -57,8 +57,12 @@
         SR_RGBAPixel pixel)
     {
         if (!canvas->pixels) return;
-        x %= canvas->width; y %= canvas->height;
-        canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)] = pixel;
+        
+        canvas->pixels[
+            SR_CanvasCalcPosition(
+                canvas, x % canvas->width, y % canvas->height
+            )
+        ] = pixel;
     }
 
     // Get a pixel in the canvas
@@ -69,9 +73,11 @@
     {
         if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
 
-        x %= canvas->width; y %= canvas->height;
-
-        return canvas->pixels[SR_CanvasCalcPosition(canvas, x, y)];
+        return canvas->pixels[
+            SR_CanvasCalcPosition(
+                canvas, x % canvas->width, y % canvas->height
+            )
+        ];
     }
 
     // Destroy the in-memory representation of the canvas
