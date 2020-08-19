@@ -347,19 +347,16 @@ SR_RotatedCanvas SR_CanvasRotate(
 
 void SR_InplaceFlip(SR_Canvas *src, bool vertical)
 {
-    register unsigned short w, h, x, y, wmax, hmax, xdest, ydest;
+    register unsigned short x, y, wmax, hmax, xdest, ydest;
     SR_RGBAPixel temp, pixel;
-
-    w = src->width;
-    h = src->height;
 
     if (vertical)
     {
-        wmax = w;
-        hmax = h >> 1;
+        wmax = src->width;
+        hmax = src->height >> 1;
     } else {
-        wmax = w >> 1;
-        hmax = h;
+        wmax = src->width >> 1;
+        hmax = src->height;
     }
 
     for (x = 0; x < wmax; x++)
@@ -369,9 +366,9 @@ void SR_InplaceFlip(SR_Canvas *src, bool vertical)
             if (vertical)
             {
                 xdest = x;
-                ydest = (h - 1) - y;
+                ydest = (src->height - 1) - y;
             } else {
-                xdest = (w - 1) - x;
+                xdest = (src->width - 1) - x;
                 ydest = y;
             }
 
