@@ -9,32 +9,33 @@ SR_RGBAPixel SR_RGBABlender(
 {
     // TODO: Make this faster and cleaner. Much faster and cleaner!
 
-    uint32_t final = 0;
+    register uint32_t final, pixel_base_whole, pixel_top_whole = 0;
+    register float alpha_mul, alpha_mul_neg;
 
-    if (mode == SR_BLEND_ADDITIVE || mode == SR_BLEND_XOR)
-    {
-        register float alpha_mul = (
-            ((float)pixel_top.alpha / 255.0) *
-            ((float)alpha_modifier / 255.0)
-        );
-        register float alpha_mul_neg = 1 - alpha_mul;
+    if (mode != SR_BLEND_ADDITIVE && mode != SR_BLEND_XOR) goto srbl_nomul;
 
-        pixel_top.rgb.red   *= alpha_mul;
-        pixel_top.rgb.blue  *= alpha_mul;
-        pixel_top.rgb.green *= alpha_mul;
+    alpha_mul = (
+        ((float)pixel_top.alpha / 255.0) *
+        ((float)alpha_modifier / 255.0)
+    );
+    alpha_mul_neg = 1 - alpha_mul;
 
-        pixel_base.rgb.red   *= alpha_mul_neg;
-        pixel_base.rgb.blue  *= alpha_mul_neg;
-        pixel_base.rgb.green *= alpha_mul_neg;
-    }
+    pixel_top.rgb.red   *= alpha_mul;
+    pixel_top.rgb.blue  *= alpha_mul;
+    pixel_top.rgb.green *= alpha_mul;
 
-    register uint32_t pixel_base_whole = SR_RGBAtoWhole(pixel_base);
-    register uint32_t pixel_top_whole  = SR_RGBAtoWhole(pixel_top );
+    pixel_base.rgb.red   *= alpha_mul_neg;
+    pixel_base.rgb.blue  *= alpha_mul_neg;
+    pixel_base.rgb.green *= alpha_mul_neg;
+
+srbl_nomul:
+    pixel_base_whole = SR_RGBAtoWhole(pixel_base);
+    pixel_top_whole  = SR_RGBAtoWhole(pixel_top );
 
     switch (mode)
     {
-        case SR_BLEND_DIRECT_XOR:
-        case SR_BLEND_XOR:
+        case SR_BLEND_DIRECT_XOR: // Mul skipped by goto srbl_nomul
+        case SR_BLEND_XOR: // Mul version
             final = pixel_base_whole ^ (pixel_top_whole & 0x00FFFFFF);
 
             break;
