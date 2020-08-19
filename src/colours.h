@@ -70,15 +70,12 @@
         __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
             { return *(SR_RGBAPixel *) &pix; }
     #else
-        __inline__ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
-            {
-                return (
-                    (pix.rgb.red        ) |
-                    (pix.rgb.green <<  8) |
-                    (pix.rgb.blue  << 16) |
-                    (pix.alpha     << 24)
-                );
-            }
+        #define SR_RGBAtoWhole(pix) (  \
+            ((pix).rgb.red        ) |  \
+            ((pix).rgb.green <<  8) |  \
+            ((pix).rgb.blue  << 16) |  \
+            ((pix).alpha     << 24)    \
+        )
 
         __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
             {
