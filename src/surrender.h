@@ -6,4 +6,5 @@
     #include "shapes.h"
     #include "image.h"
     #include "rays.h"
+    #include "2dscene.h"
 #endif
