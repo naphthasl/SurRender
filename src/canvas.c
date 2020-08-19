@@ -263,60 +263,59 @@ SR_RotatedCanvas SR_CanvasRotate(
     }
     SR_ZeroFill(&(final.canvas));
 
-    if (fmod(degrees, 90) == .0)
+    if (fmod(degrees, 90) != .0) goto srcvrot_mismatch;
+
+    if (!((unsigned short)degrees % 360))
     {
-        if (!((unsigned short)degrees % 360))
-        {
-            SR_MergeCanvasIntoCanvas(
-                &final.canvas,
-                src,
-                -final.offset_x,
-                -final.offset_y,
-                255,
-                SR_BLEND_REPLACE
-            );
+        SR_MergeCanvasIntoCanvas(
+            &final.canvas,
+            src,
+            -final.offset_x,
+            -final.offset_y,
+            255,
+            SR_BLEND_REPLACE
+        );
 
-            return final;
-        }
+        goto srcvrot_finished;
+    }
 
-        if (w == h)
+    if (w != h) goto srcvrot_mismatch;
+
+    register unsigned short x, y;
+    for (x = 0; x < w; x++)
+    {
+        for (y = 0; y < h; y++)
         {
-            register unsigned short x, y;
-            for (x = 0; x < w; x++)
+            SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
+            unsigned short nx, ny;
+            switch ((unsigned short)degrees % 360)
             {
-                for (y = 0; y < h; y++)
-                {
-                    SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
-                    unsigned short nx, ny;
-                    switch ((unsigned short)degrees % 360)
-                    {
-                        case 90:
-                            nx = (h - 1) - y;
-                            ny = x;
-                            break;
-                        case 180:
-                            nx = (w - 1) - x;
-                            ny = (h - 1) - y;
-                            break;
-                        case 270:
-                            nx = y;
-                            ny = (w - 1) - x;
-                            break;
-                    }
-
-                    SR_CanvasSetPixel(
-                        &final.canvas,
-                        nx - final.offset_x,
-                        ny - final.offset_y,
-                        pixbuf
-                    );
-                }
+                case 90:
+                    nx = (h - 1) - y;
+                    ny = x;
+                    break;
+                case 180:
+                    nx = (w - 1) - x;
+                    ny = (h - 1) - y;
+                    break;
+                case 270:
+                    nx = y;
+                    ny = (w - 1) - x;
+                    break;
             }
 
-            return final;
+            SR_CanvasSetPixel(
+                &final.canvas,
+                nx - final.offset_x,
+                ny - final.offset_y,
+                pixbuf
+            );
         }
     }
 
+    goto srcvrot_finished;
+
+srcvrot_mismatch:
     // Secretly convert to radians :)
     degrees *= 0.017453292519943295;
     //magic numbers warning
@@ -342,6 +341,8 @@ SR_RotatedCanvas SR_CanvasRotate(
             SR_CanvasSetPixel(&(final.canvas), nx - 1, ny    , pixel);
         }
     }
+
+srcvrot_finished:
     return final;
 }
 
