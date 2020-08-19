@@ -123,7 +123,7 @@
     // Returns a canvas with the input canvas's content skewed
     // set mode for vertical shearing, else turn off for horizontal
     // Will malloc a new canvas!
-    SR_Canvas SR_CanvasShear(
+    SR_RotatedCanvas SR_CanvasShear(
         SR_Canvas *src,
         int skew_amount,
         bool mode);
