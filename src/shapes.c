@@ -53,32 +53,35 @@ void SR_DrawTriOutline(
 void SR_DrawTri(
     SR_Canvas *canvas,
     SR_RGBAPixel colour,
-    int x0,
-    int y0, 
-    int x1, 
-    int y1,
-    int x2,
-    int y2)
+    int x0, int y0,
+    int x1, int y1,
+    int x2, int y2)
 {
-    int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
-    int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
-    int err = dx + dy, e2;
-
-    for (;;)
-    {
-        SR_CanvasSetPixel(canvas, x0, y0, colour);
-        SR_DrawLine(canvas, colour, x0, y0, x2, y2);
-        if (x0 == x1 && y0 == y1) break;
-        e2 = err << 1;
-        if (e2 >= dy)
-        {
-            err += dy;
-            x0 += sx;
-        }
-        if (e2 <= dx)
-        {
-            err += dx;
-            y0 += sy;
+	unsigned short min_x = MIN(x0, MIN(x1, x2));
+	unsigned short min_y = MIN(y0, MIN(y1, y2));
+	unsigned short max_x = MAX(x0, MAX(x1, x2));
+	unsigned short max_y = MAX(y0, MAX(y1, y2));
+    
+    int v0x = x1 - x0;
+    int v0y = y1 - y0;
+    int v1x = x2 - x0;
+    int v1y = y2 - y0;
+    
+    float vcross = v0x * v1y - v0y * v1x;
+    
+    for (unsigned short x = min_x; x <= max_x; x++) {
+        for (unsigned short y = min_y; y <= max_y; y++) {
+            int vqx = x - x0;
+            int vqy = y - y0;
+            
+            float s = (float)(vqx * v1y - vqy * v1x);
+            s /= vcross;
+            float t = (float)(v0x * vqy - v0y * vqx);
+            t /= vcross;
+            
+            if ((s >= 0) && (t >= 0) && (s + t <= 1)) {
+				SR_CanvasSetPixel(canvas, x, y, colour);
+			}
         }
     }
 }
