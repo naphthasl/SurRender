@@ -17,15 +17,18 @@ void SR_DrawLine(
     int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
     int err = dx + dy, e2;
 
-    for (;;) {
+    for (;;)
+    {
         SR_CanvasSetPixel(canvas, x0, y0, colour);
         if (x0 == x1 && y0 == y1) break;
         e2 = err << 1;
-        if (e2 >= dy) {
+        if (e2 >= dy)
+        {
             err += dy;
             x0 += sx;
         }
-        if (e2 <= dx) {
+        if (e2 <= dx)
+        {
             err += dx;
             y0 += sy;
         }
@@ -61,16 +64,19 @@ void SR_DrawTri(
     int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
     int err = dx + dy, e2;
 
-    for (;;) {
+    for (;;)
+    {
         SR_CanvasSetPixel(canvas, x0, y0, colour);
         SR_DrawLine(canvas, colour, x0, y0, x2, y2);
         if (x0 == x1 && y0 == y1) break;
         e2 = err << 1;
-        if (e2 >= dy) {
+        if (e2 >= dy)
+        {
             err += dy;
             x0 += sx;
         }
-        if (e2 <= dx) {
+        if (e2 <= dx)
+        {
             err += dx;
             y0 += sy;
         }
@@ -102,12 +108,14 @@ void SR_DrawRectOutline(
     unsigned short x1 = MIN(canvas->width - 1, w);
     unsigned short y1 = MIN(canvas->height - 1, h);
     
-    for (unsigned short xi = x; xi <= x1; xi++) {
+    for (unsigned short xi = x; xi <= x1; xi++)
+    {
         SR_CanvasSetPixel(canvas, xi, y, colour);
         SR_CanvasSetPixel(canvas, xi, h, colour);
     }
     
-    for (unsigned short yi = y + 1; yi < y1; yi++) {
+    for (unsigned short yi = y + 1; yi < y1; yi++)
+    {
         SR_CanvasSetPixel(canvas, x, yi, colour);
         SR_CanvasSetPixel(canvas, w, yi, colour);
     }
@@ -124,8 +132,10 @@ void SR_DrawRect(
     unsigned short x1 = MIN(canvas->width - 1, w + x);
     unsigned short y1 = MIN(canvas->height - 1, h + y);
     
-    for (unsigned short yi = y; yi <= y1; yi++) {
-        for (unsigned short xi = x; xi <= x1; xi++) {
+    for (unsigned short yi = y; yi <= y1; yi++)
+    {
+        for (unsigned short xi = x; xi <= x1; xi++)
+        {
             SR_CanvasSetPixel(canvas, xi, yi, colour);
         }
     }
