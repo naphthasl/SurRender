@@ -360,6 +360,7 @@ void SR_InplaceFlip(SR_Canvas *src, bool vertical)
         hmax =  h + 1;
     }
 
+    SR_RGBAPixel temp, pixel;
     for (x = 0; x < wmax; x++)
     {
         for (y = 0; y < hmax; y++)
@@ -373,8 +374,8 @@ void SR_InplaceFlip(SR_Canvas *src, bool vertical)
                 ydest = y;
             }
 
-            SR_RGBAPixel temp  = SR_CanvasGetPixel(src, xdest, ydest);
-            SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+            temp  = SR_CanvasGetPixel(src, xdest, ydest);
+            pixel = SR_CanvasGetPixel(src, x, y);
             SR_CanvasSetPixel(src, xdest, ydest, pixel);
             SR_CanvasSetPixel(src, x, y, temp);
         }
