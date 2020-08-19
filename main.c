@@ -48,7 +48,7 @@ int main(void)
         SR_CanvasSetPixel(&canvy, times, times, SR_CreateRGBA(0, 0, 0, 255));
     printf("Set Pixel Ticks: %llu\n", rdtsc() - i);
 
-    SR_Canvas imagetest = SR_ImageFileToCanvas("./KRABS_WIDE.BMP");
+    SR_Canvas imagetest = SR_ImageFileToCanvas("./PUCK.BMP");
     SR_RotatedCanvas rotcanvas;
     float speeen = 0.0;
     
@@ -146,7 +146,7 @@ event_loop:
         }
     }
 
-    /*
+    
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -188,7 +188,7 @@ event_loop:
         rand() % (canvy.width),
         rand() % (canvy.height)
     );
-    */
+    
     speeen += 1;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(

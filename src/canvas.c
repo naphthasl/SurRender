@@ -330,15 +330,16 @@ SR_RotatedCanvas SR_CanvasRotate(
     
     for (int x = -half_w; x < half_w; x++) {
         for (int y = -half_h; y < half_h; y++) {
+            int nx = (x * the_cos + y * the_sin + half_w) - final.offset_x;
+            int ny = (y * the_cos - x * the_sin + half_h) - final.offset_y;
+
             SR_RGBAPixel pixel = SR_CanvasGetPixel(
                 src,
                 x + half_w, 
                 y + half_h);
-            SR_CanvasSetPixel(
-                &(final.canvas),
-                (x * the_cos + y * the_sin + half_w) - final.offset_x,
-                (y * the_cos - x * the_sin + half_h) - final.offset_y,
-                pixel);
+
+            SR_CanvasSetPixel(&(final.canvas), nx    , ny    , pixel);
+            SR_CanvasSetPixel(&(final.canvas), nx - 1, ny    , pixel);
         }
     }
     return final;
