@@ -50,30 +50,30 @@ int main(void)
 
     SR_Canvas imagetest = SR_ImageFileToCanvas("./KRABS_WIDE.BMP");
     SR_RotatedCanvas rotcanvas;
-	float speeen = 0.0;
-	
-	//look i'm not sure the 90 deg rots are hecking properly
-	//yes i could theoretically just rotate the same tempbox
-	//canvas three times but testing so SKDJKALDFJB Goa hgasoiugha
-	SR_Canvas boxes = SR_NewCanvas(128, 128);
-	SR_ZeroFill(&boxes);
+    float speeen = 0.0;
+    
+    //look i'm not sure the 90 deg rots are hecking properly
+    //yes i could theoretically just rotate the same tempbox
+    //canvas three times but testing so SKDJKALDFJB Goa hgasoiugha
+    SR_Canvas boxes = SR_NewCanvas(128, 128);
+    SR_ZeroFill(&boxes);
     char filename[] = "TEST_SM.BMP";
-	SR_Canvas tempbox0 = SR_ImageFileToCanvas(filename);
-	SR_Canvas tempbox1 = SR_ImageFileToCanvas(filename);
-	tempbox1 = SR_CanvasRotate(&tempbox1, 90, 0).canvas;
-	SR_Canvas tempbox2 = SR_ImageFileToCanvas(filename);
-	tempbox2 = SR_CanvasRotate(&tempbox2, 180, 0).canvas;
-	SR_Canvas tempbox3 = SR_ImageFileToCanvas(filename);
-	tempbox3 = SR_CanvasRotate(&tempbox3, 270, 0).canvas;
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox0,  2,  2, 255, SR_BLEND_REPLACE);
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox2, 82,  2, 255, SR_BLEND_REPLACE);
-	SR_MergeCanvasIntoCanvas(&boxes, &tempbox3,  2, 42, 255, SR_BLEND_REPLACE);
-	SR_DestroyCanvas(&tempbox0);
-	SR_DestroyCanvas(&tempbox1);
-	SR_DestroyCanvas(&tempbox2);
-	SR_DestroyCanvas(&tempbox3);
-	
+    SR_Canvas tempbox0 = SR_ImageFileToCanvas(filename);
+    SR_Canvas tempbox1 = SR_ImageFileToCanvas(filename);
+    tempbox1 = SR_CanvasRotate(&tempbox1, 90, 0).canvas;
+    SR_Canvas tempbox2 = SR_ImageFileToCanvas(filename);
+    tempbox2 = SR_CanvasRotate(&tempbox2, 180, 0).canvas;
+    SR_Canvas tempbox3 = SR_ImageFileToCanvas(filename);
+    tempbox3 = SR_CanvasRotate(&tempbox3, 270, 0).canvas;
+    SR_MergeCanvasIntoCanvas(&boxes, &tempbox0,  2,  2, 255, SR_BLEND_REPLACE);
+    SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
+    SR_MergeCanvasIntoCanvas(&boxes, &tempbox2, 82,  2, 255, SR_BLEND_REPLACE);
+    SR_MergeCanvasIntoCanvas(&boxes, &tempbox3,  2, 42, 255, SR_BLEND_REPLACE);
+    SR_DestroyCanvas(&tempbox0);
+    SR_DestroyCanvas(&tempbox1);
+    SR_DestroyCanvas(&tempbox2);
+    SR_DestroyCanvas(&tempbox3);
+    
     // free(imagetest.pixels); imagetest.pixels = NULL;
 
     if (!SR_CanvasIsValid(&canvy)) {
@@ -189,7 +189,7 @@ event_loop:
         rand() % (canvy.height)
     );
     */
-	speeen += 1;
+    speeen += 1;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),

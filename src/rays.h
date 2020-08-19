@@ -7,7 +7,7 @@
 
     typedef struct SR_3DScene {
         // TODO
-	} SR_3DScene;
+    } SR_3DScene;
 
     typedef struct SR_3DCamera {
         float x; float pitch;
@@ -15,5 +15,5 @@
         float z; float roll;
         SR_Canvas *canvas;
         SR_3DScene *scene;
-	} SR_3DCamera;
+    } SR_3DCamera;
 #endif

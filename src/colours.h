@@ -3,15 +3,15 @@
     #include "glbl.h"
 
     typedef struct SR_RGBPixel {
-	    uint8_t red;
+        uint8_t red;
         uint8_t green;
         uint8_t blue;
-	} SR_RGBPixel;
+    } SR_RGBPixel;
 
     typedef struct SR_RGBAPixel {
-	    SR_RGBPixel rgb;
+        SR_RGBPixel rgb;
         uint8_t alpha;
-	} SR_RGBAPixel;
+    } SR_RGBAPixel;
 
     enum SR_BlendingModes {
         // XOR all RGB values

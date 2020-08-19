@@ -8,7 +8,7 @@
         unsigned short height;
         float ratio;
         SR_RGBAPixel *pixels;
-	} SR_Canvas;
+    } SR_Canvas;
 
     typedef struct SR_RotatedCanvas {
         int offset_x;
@@ -123,23 +123,23 @@
     // Returns a canvas with the input canvas's content skewed horizontally
     // Will malloc a new canvas!
     SR_Canvas SR_CanvasXShear(
-		SR_Canvas *src,
-		int skew_amount);
-	
-	// Returns a canvas with the input canvas's content skewed vertically
+        SR_Canvas *src,
+        int skew_amount);
+    
+    // Returns a canvas with the input canvas's content skewed vertically
     // Will malloc a new canvas!
     SR_Canvas SR_CanvasYShear(
-		SR_Canvas *src,
-		int skew_amount);
-	
-	// Returns a canvas that is hecking rotated, hopefully
-	// Expects an angle in radians
-	// enable safety if you are a wuss
-	// Will malloc a new canvas!
-	SR_RotatedCanvas SR_CanvasRotate(
-		SR_Canvas *src,
-		float degrees,
-		bool safety_padding);
+        SR_Canvas *src,
+        int skew_amount);
+    
+    // Returns a canvas that is hecking rotated, hopefully
+    // Expects an angle in radians
+    // enable safety if you are a wuss
+    // Will malloc a new canvas!
+    SR_RotatedCanvas SR_CanvasRotate(
+        SR_Canvas *src,
+        float degrees,
+        bool safety_padding);
 
     // Flip the target canvas - does not malloc, works in-place.
     void SR_VerticalFlipCanvas(SR_Canvas *src);

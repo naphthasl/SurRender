@@ -198,69 +198,69 @@ SR_Canvas SR_CanvasScale(
 }
 
 SR_Canvas SR_CanvasXShear(
-		SR_Canvas *src,
-		int skew_amount)
+        SR_Canvas *src,
+        int skew_amount)
 {
-	unsigned short w = src->width;
-	unsigned short h = src->height;
-	unsigned short ycenter = h >> 1;
-	float skew = (float)skew_amount / (float)ycenter;
-	skew_amount = abs(skew_amount);
-	SR_Canvas final = SR_NewCanvas(w, h);
-	SR_ZeroFill(&final);
-	for (unsigned short y = 0; y < h; y++) {
-		int xshift = (y - ycenter) * skew;
-		for (unsigned short x = 0; x < w; x++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, x + xshift, y, pixel);
-		}
-	}
-	return final;
+    unsigned short w = src->width;
+    unsigned short h = src->height;
+    unsigned short ycenter = h >> 1;
+    float skew = (float)skew_amount / (float)ycenter;
+    skew_amount = abs(skew_amount);
+    SR_Canvas final = SR_NewCanvas(w, h);
+    SR_ZeroFill(&final);
+    for (unsigned short y = 0; y < h; y++) {
+        int xshift = (y - ycenter) * skew;
+        for (unsigned short x = 0; x < w; x++) {
+            SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+            SR_CanvasSetPixel(&final, x + xshift, y, pixel);
+        }
+    }
+    return final;
 }
 
 SR_Canvas SR_CanvasYShear(
-		SR_Canvas *src,
-		int skew_amount)
+        SR_Canvas *src,
+        int skew_amount)
 {
-	unsigned short w = src->width;
-	unsigned short h = src->height;
-	unsigned short xcenter = w >> 1;
-	float skew = (float)skew_amount / (float)xcenter;
-	skew_amount = abs(skew_amount);
-	SR_Canvas final = SR_NewCanvas(w, h);
-	SR_ZeroFill(&final);
-	for (unsigned short x = 0; x < w; x++) {
-		int yshift = (x - xcenter) * skew;
-		for (unsigned short y = 0; y < h; y++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-			SR_CanvasSetPixel(&final, x, y + yshift, pixel);
-		}
-	}
-	return final;
+    unsigned short w = src->width;
+    unsigned short h = src->height;
+    unsigned short xcenter = w >> 1;
+    float skew = (float)skew_amount / (float)xcenter;
+    skew_amount = abs(skew_amount);
+    SR_Canvas final = SR_NewCanvas(w, h);
+    SR_ZeroFill(&final);
+    for (unsigned short x = 0; x < w; x++) {
+        int yshift = (x - xcenter) * skew;
+        for (unsigned short y = 0; y < h; y++) {
+            SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
+            SR_CanvasSetPixel(&final, x, y + yshift, pixel);
+        }
+    }
+    return final;
 }
 
 SR_RotatedCanvas SR_CanvasRotate(
-	SR_Canvas *src,
-	float degrees,
-	bool safety_padding)
+    SR_Canvas *src,
+    float degrees,
+    bool safety_padding)
 {
     degrees = fmod(degrees, 360);
 
-	SR_Canvas temp;
-	unsigned short w = src->width;
-	unsigned short h = src->height;
+    SR_Canvas temp;
+    unsigned short w = src->width;
+    unsigned short h = src->height;
 
-	SR_RotatedCanvas final;
-	if (safety_padding) {
+    SR_RotatedCanvas final;
+    if (safety_padding) {
         unsigned short boundary = MAX(w, h) << 1;
         final.canvas = SR_NewCanvas(boundary, boundary);
-		final.offset_x = -(int)(boundary >> 2);
-		final.offset_y = -(int)(boundary >> 2);
-	} else {
+        final.offset_x = -(int)(boundary >> 2);
+        final.offset_y = -(int)(boundary >> 2);
+    } else {
         final.canvas = SR_NewCanvas(w, h);
-		final.offset_x = 0;
-		final.offset_y = 0;
-	}
+        final.offset_x = 0;
+        final.offset_y = 0;
+    }
     SR_ZeroFill(&(final.canvas));
 
     if (fmod(degrees, 90) == .0)
@@ -319,29 +319,29 @@ SR_RotatedCanvas SR_CanvasRotate(
 
     // Secretly convert to radians :)
     degrees *= 0.017453292519943295;
-	//magic numbers warning
-	//modulo by 2pi
-	degrees = fmod(degrees, 6.28318530718);
+    //magic numbers warning
+    //modulo by 2pi
+    degrees = fmod(degrees, 6.28318530718);
 
-	float the_sin = -sin(degrees);
-	float the_cos = cos(degrees);
-	int half_w = w >> 1;
-	int half_h = h >> 1;
-	
-	for (int x = -half_w; x < half_w; x++) {
-		for (int y = -half_h; y < half_h; y++) {
-			SR_RGBAPixel pixel = SR_CanvasGetPixel(
-				src,
-				x + half_w, 
-				y + half_h);
-			SR_CanvasSetPixel(
-				&(final.canvas),
-				(x * the_cos + y * the_sin + half_w) - final.offset_x,
-				(y * the_cos - x * the_sin + half_h) - final.offset_y,
-				pixel);
-		}
-	}
-	return final;
+    float the_sin = -sin(degrees);
+    float the_cos = cos(degrees);
+    int half_w = w >> 1;
+    int half_h = h >> 1;
+    
+    for (int x = -half_w; x < half_w; x++) {
+        for (int y = -half_h; y < half_h; y++) {
+            SR_RGBAPixel pixel = SR_CanvasGetPixel(
+                src,
+                x + half_w, 
+                y + half_h);
+            SR_CanvasSetPixel(
+                &(final.canvas),
+                (x * the_cos + y * the_sin + half_w) - final.offset_x,
+                (y * the_cos - x * the_sin + half_h) - final.offset_y,
+                pixel);
+        }
+    }
+    return final;
 }
 
 void SR_VerticalFlipCanvas(SR_Canvas *src)
