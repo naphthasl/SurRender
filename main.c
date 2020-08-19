@@ -74,6 +74,9 @@ int main(void)
     SR_DestroyCanvas(&tempbox2);
     SR_DestroyCanvas(&tempbox3);
     
+    SR_Canvas pokesquish = SR_ImageFileToCanvas("./GOODRA.BMP");
+    SR_RotatedCanvas squish;
+    
     // free(imagetest.pixels); imagetest.pixels = NULL;
 
     if (!SR_CanvasIsValid(&canvy)) {
@@ -196,7 +199,15 @@ event_loop:
         0, 0,
         255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
-
+    
+    squish = SR_CanvasShear(
+        &pokesquish,
+        sin(speeen * 0.017453292519943295 * 5) * 16,
+        0);
+    SR_MergeCanvasIntoCanvas(&canvy, &(squish.canvas),
+        420 + squish.offset_x, 420, 255, SR_BLEND_ADDITIVE);
+    SR_DestroyCanvas(&(squish.canvas));
+    
     SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_ADDITIVE);
     
     /* update the canvas here, the rest is
