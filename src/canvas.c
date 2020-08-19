@@ -345,35 +345,37 @@ SR_RotatedCanvas SR_CanvasRotate(
     return final;
 }
 
-void SR_VerticalFlipCanvas(SR_Canvas *src)
+void SR_InplaceFlip(SR_Canvas *src, bool vertical)
 {
     register unsigned short w = src->width  - 1;
     register unsigned short h = src->height - 1;
-    register unsigned short x, y;
-    for (x = 0; x < src->width; x++)
-    {
-        for (y = 0; y < (src->height >> 1); y++)
-        {
-            SR_RGBAPixel temp  = SR_CanvasGetPixel(src, x, h - y);
-            SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-            SR_CanvasSetPixel(src, x, h - y, pixel);
-            SR_CanvasSetPixel(src, x, y, temp);
-        }
-    }
-}
 
-void SR_HorizontalFlipCanvas(SR_Canvas *src)
-{
-    register unsigned short w = src->width  - 1;
-    register unsigned short h = src->height - 1;
-    register unsigned short x, y;
-    for (x = 0; x < (src->width >> 1); x++)
+    register unsigned short x, y, wmax, hmax, xdest, ydest;
+    if (vertical)
     {
-        for (y = 0; y < src->height; y++)
+        wmax =  w + 1;
+        hmax = (h + 1) >> 1;
+    } else {
+        wmax = (w + 1) >> 1;
+        hmax =  h + 1;
+    }
+
+    for (x = 0; x < wmax; x++)
+    {
+        for (y = 0; y < hmax; y++)
         {
-            SR_RGBAPixel temp  = SR_CanvasGetPixel(src, w - x, y);
+            if (vertical)
+            {
+                xdest = x;
+                ydest = h - y;
+            } else {
+                xdest = w - x;
+                ydest = y;
+            }
+
+            SR_RGBAPixel temp  = SR_CanvasGetPixel(src, xdest, ydest);
             SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-            SR_CanvasSetPixel(src, w - x, y, pixel);
+            SR_CanvasSetPixel(src, xdest, ydest, pixel);
             SR_CanvasSetPixel(src, x, y, temp);
         }
     }

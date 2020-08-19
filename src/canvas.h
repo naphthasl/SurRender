@@ -142,6 +142,6 @@
         bool safety_padding);
 
     // Flip the target canvas - does not malloc, works in-place.
-    void SR_VerticalFlipCanvas(SR_Canvas *src);
-    void SR_HorizontalFlipCanvas(SR_Canvas *src);
+    // Enable vertical to flip vertically. Leave disabled for horizontal.
+    void SR_InplaceFlip(SR_Canvas *src, bool vertical);
 #endif
