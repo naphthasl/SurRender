@@ -200,7 +200,7 @@ SR_Canvas SR_CanvasScale(
     return final;
 }
 
-SR_RotatedCanvas SR_CanvasShear(
+SR_OffsetCanvas SR_CanvasShear(
         SR_Canvas *src,
         int skew_amount,
         bool mode)
@@ -214,7 +214,7 @@ SR_RotatedCanvas SR_CanvasShear(
     skew = (float)skew_amount / (float)mcenter;
     skew_amount = abs(skew_amount);
 
-    SR_RotatedCanvas final;
+    SR_OffsetCanvas final;
 
     if (mode) final.canvas = SR_NewCanvas(w, h + (skew_amount << 1));
     else final.canvas = SR_NewCanvas(w + (skew_amount << 1), h);
@@ -252,7 +252,7 @@ SR_RotatedCanvas SR_CanvasShear(
     return final;
 }
 
-SR_RotatedCanvas SR_CanvasRotate(
+SR_OffsetCanvas SR_CanvasRotate(
     SR_Canvas *src,
     float degrees,
     bool safety_padding)
@@ -262,7 +262,7 @@ SR_RotatedCanvas SR_CanvasRotate(
     int x, y, nxM, nyM, half_w, half_h;
     float the_sin, the_cos;
     SR_RGBAPixel pixel, pixbuf;
-    SR_RotatedCanvas final;
+    SR_OffsetCanvas final;
 
     degrees = fmod(degrees, 360);
 

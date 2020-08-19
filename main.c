@@ -49,7 +49,7 @@ int main(void)
     printf("Set Pixel Ticks: %llu\n", rdtsc() - i);
 
     SR_Canvas imagetest = SR_ImageFileToCanvas("./PUCK.BMP");
-    SR_RotatedCanvas rotcanvas;
+    SR_OffsetCanvas rotcanvas;
     float speeen = 0.0;
     
     //look i'm not sure the 90 deg rots are hecking properly
@@ -75,7 +75,7 @@ int main(void)
     SR_DestroyCanvas(&tempbox3);
     
     SR_Canvas pokesquish = SR_ImageFileToCanvas("./GOODRA.BMP");
-    SR_RotatedCanvas squish;
+    SR_OffsetCanvas squish;
     
     // free(imagetest.pixels); imagetest.pixels = NULL;
 
