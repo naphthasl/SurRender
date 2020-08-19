@@ -279,39 +279,42 @@ SR_RotatedCanvas SR_CanvasRotate(
             return final;
         }
 
-        register unsigned short x, y;
-        for (x = 0; x < w; x++)
+        if (w == h)
         {
-            for (y = 0; y < h; y++)
+            register unsigned short x, y;
+            for (x = 0; x < w; x++)
             {
-                SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
-                unsigned short nx, ny;
-                switch ((unsigned short)degrees % 360)
+                for (y = 0; y < h; y++)
                 {
-                    case 90:
-                        nx = (h - 1) - y;
-                        ny = x;
-                        break;
-                    case 180:
-                        nx = (w - 1) - x;
-                        ny = (h - 1) - y;
-                        break;
-                    case 270:
-                        nx = y;
-                        ny = (w - 1) - x;
-                        break;
+                    SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
+                    unsigned short nx, ny;
+                    switch ((unsigned short)degrees % 360)
+                    {
+                        case 90:
+                            nx = (h - 1) - y;
+                            ny = x;
+                            break;
+                        case 180:
+                            nx = (w - 1) - x;
+                            ny = (h - 1) - y;
+                            break;
+                        case 270:
+                            nx = y;
+                            ny = (w - 1) - x;
+                            break;
+                    }
+
+                    SR_CanvasSetPixel(
+                        &final.canvas,
+                        nx - final.offset_x,
+                        ny - final.offset_y,
+                        pixbuf
+                    );
                 }
-
-                SR_CanvasSetPixel(
-                    &final.canvas,
-                    nx - final.offset_x,
-                    ny - final.offset_y,
-                    pixbuf
-                );
             }
-        }
 
-        return final;
+            return final;
+        }
     }
 
     // Secretly convert to radians :)
