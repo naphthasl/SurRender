@@ -205,7 +205,7 @@ event_loop:
         sin(speeen * 0.017453292519943295 * 5) * 16,
         0);
     SR_MergeCanvasIntoCanvas(&canvy, &(squish.canvas),
-        420 + squish.x_offset, 420, 255, SR_BLEND_REPLACE);
+        420 + squish.offset_x, 420, 255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(squish.canvas));
     
     SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_ADDITIVE);
