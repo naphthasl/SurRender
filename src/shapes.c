@@ -83,18 +83,6 @@ void SR_DrawTri(
     }
 }
 
-void SR_DrawTriFlat(
-    SR_Canvas *canvas,
-    SR_RGBAPixel colour,
-    int x0,
-    int y0,
-    int x1_0,
-    int x1_1,
-    int y1)
-{
-    //todo????
-}
-
 void SR_DrawRectOutline(
     SR_Canvas *canvas,
     SR_RGBAPixel colour,
