@@ -202,41 +202,50 @@ SR_RotatedCanvas SR_CanvasShear(
         int skew_amount,
         bool mode)
 {
-    unsigned short w = src->width;
-    unsigned short h = src->height;
-    unsigned short ycenter = h >> 1;
-    unsigned short xcenter = w >> 1;
+    unsigned short w, h, mcenter;
     float skew;
+
+    w = src->width;
+    h = src->height;
+    mcenter = mode ? w >> 1 : h >> 1;
+    skew = (float)skew_amount / (float)mcenter;
+    skew_amount = abs(skew_amount);
+
     SR_RotatedCanvas final;
-    if (mode) {
-        skew = (float)skew_amount / (float)xcenter;
-        skew_amount = abs(skew_amount);
-        final.offset_x = 0;
-        final.offset_y = -skew_amount;
-        final.canvas = SR_NewCanvas(w, h + (skew_amount << 1));
-        SR_ZeroFill(&(final.canvas));
-        for (unsigned short x = 0; x < w; x++) {
-            int yshift = skew_amount + (x - xcenter) * skew;
-            for (unsigned short y = 0; y < h; y++) {
+
+    if (mode) final.canvas = SR_NewCanvas(w, h + (skew_amount << 1));
+    else final.canvas = SR_NewCanvas(w + (skew_amount << 1), h);
+    SR_ZeroFill(&(final.canvas));
+
+    final.offset_x = mode ? 0 : -skew_amount;
+    final.offset_y = mode ? -skew_amount : 0;
+
+    int mshift;
+
+    if (mode)
+    {
+        for (unsigned short x = 0; x < w; x++)
+        {
+            mshift = skew_amount + (x - mcenter) * skew;
+            for (unsigned short y = 0; y < h; y++)
+            {
                 SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-                SR_CanvasSetPixel(&(final.canvas), x, y + yshift, pixel);
+                SR_CanvasSetPixel(&(final.canvas), x, y + mshift, pixel);
             }
         }
-	} else {
-        skew = (float)skew_amount / (float)ycenter;
-        skew_amount = abs(skew_amount);
-        final.offset_x = -skew_amount;
-        final.offset_y = 0;
-        final.canvas = SR_NewCanvas(w + (skew_amount << 1), h);
-        SR_ZeroFill(&(final.canvas));
-        for (unsigned short y = 0; y < h; y++) {
-            int xshift = skew_amount + (y - ycenter) * skew;
-            for (unsigned short x = 0; x < w; x++) {
+	} else
+    {
+        for (unsigned short y = 0; y < h; y++)
+        {
+            mshift = skew_amount + (y - mcenter) * skew;
+            for (unsigned short x = 0; x < w; x++)
+            {
                 SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
-                SR_CanvasSetPixel(&(final.canvas), x + xshift, y, pixel);
+                SR_CanvasSetPixel(&(final.canvas), x + mshift, y, pixel);
             }
         }
     }
+
     return final;
 }
 
