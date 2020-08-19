@@ -120,17 +120,13 @@
         unsigned short newHeight,
         char mode);
     
-    // Returns a canvas with the input canvas's content skewed horizontally
+    // Returns a canvas with the input canvas's content skewed
+    // set mode for vertical shearing, else turn off for horizontal
     // Will malloc a new canvas!
-    SR_Canvas SR_CanvasXShear(
+    SR_Canvas SR_CanvasShear(
         SR_Canvas *src,
-        int skew_amount);
-    
-    // Returns a canvas with the input canvas's content skewed vertically
-    // Will malloc a new canvas!
-    SR_Canvas SR_CanvasYShear(
-        SR_Canvas *src,
-        int skew_amount);
+        int skew_amount,
+        bool mode);
     
     // Returns a canvas that is hecking rotated, hopefully
     // Expects an angle in radians
