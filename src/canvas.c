@@ -261,7 +261,7 @@ SR_RotatedCanvas SR_CanvasRotate(
         final.offset_x = 0;
         final.offset_y = 0;
     }
-    SR_ZeroFill(&(final.canvas));
+    SR_ZeroFill(&final.canvas);
 
     if (fmod(degrees, 90) != .0) goto srcvrot_mismatch;
 
@@ -281,26 +281,26 @@ SR_RotatedCanvas SR_CanvasRotate(
 
     if (w != h) goto srcvrot_mismatch;
 
-    register unsigned short x, y;
-    for (x = 0; x < w; x++)
+    register unsigned short xC, yC;
+    for (xC = 0; xC < w; xC++)
     {
-        for (y = 0; y < h; y++)
+        for (yC = 0; yC < h; yC++)
         {
-            SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, x, y);
+            SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, xC, yC);
             unsigned short nx, ny;
-            switch ((unsigned short)degrees % 360)
+            switch (((unsigned short)degrees) % 360)
             {
                 case 90:
-                    nx = (h - 1) - y;
-                    ny = x;
+                    nx = (h - 1) - yC;
+                    ny = xC;
                     break;
                 case 180:
-                    nx = (w - 1) - x;
-                    ny = (h - 1) - y;
+                    nx = (w - 1) - xC;
+                    ny = (h - 1) - yC;
                     break;
                 case 270:
-                    nx = y;
-                    ny = (w - 1) - x;
+                    nx = yC;
+                    ny = (w - 1) - xC;
                     break;
             }
 
@@ -316,29 +316,26 @@ SR_RotatedCanvas SR_CanvasRotate(
     goto srcvrot_finished;
 
 srcvrot_mismatch:
-    // Secretly convert to radians :)
-    degrees *= 0.017453292519943295;
-    //magic numbers warning
-    //modulo by 2pi
-    degrees = fmod(degrees, 6.28318530718);
+    // Convert to radians and then modulo by 2*pi
+    degrees = fmod(degrees * 0.017453292519943295, 6.28318530718);
 
     float the_sin = -sin(degrees);
     float the_cos = cos(degrees);
     int half_w = w >> 1;
     int half_h = h >> 1;
     
-    for (int x = -half_w; x < half_w; x++) {
-        for (int y = -half_h; y < half_h; y++) {
-            int nx = (x * the_cos + y * the_sin + half_w) - final.offset_x;
-            int ny = (y * the_cos - x * the_sin + half_h) - final.offset_y;
+    int x, y, nx, ny;
+    SR_RGBAPixel pixel;
 
-            SR_RGBAPixel pixel = SR_CanvasGetPixel(
-                src,
-                x + half_w, 
-                y + half_h);
+    for (x = -half_w; x < half_w; x++) {
+        for (y = -half_h; y < half_h; y++) {
+            nx = (x * the_cos + y * the_sin + half_w) - final.offset_x;
+            ny = (y * the_cos - x * the_sin + half_h) - final.offset_y;
+            pixel = SR_CanvasGetPixel(src, x + half_w, y + half_h);
 
-            SR_CanvasSetPixel(&(final.canvas), nx    , ny    , pixel);
-            SR_CanvasSetPixel(&(final.canvas), nx - 1, ny    , pixel);
+            // Set target AND a single nearby pixel to de-alias
+            SR_CanvasSetPixel(&final.canvas, nx    , ny    , pixel);
+            SR_CanvasSetPixel(&final.canvas, nx - 1, ny    , pixel);
         }
     }
 
