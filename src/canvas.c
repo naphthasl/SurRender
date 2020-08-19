@@ -14,12 +14,14 @@ bool SR_ResizeCanvas(
     
     canvas->ratio = (float)width / height;
 
-    unsigned int size = (
-        (unsigned int)width *
-        (unsigned int)height *
-        sizeof(SR_RGBAPixel));
-
-    canvas->pixels = realloc(canvas->pixels, size);
+    canvas->pixels = realloc(
+        canvas->pixels,
+        (unsigned int)(
+            (unsigned int)width *
+            (unsigned int)height *
+            sizeof(SR_RGBAPixel)
+        )
+    );
 
     return BOOLIFY(canvas->pixels);
 }
@@ -28,12 +30,7 @@ void SR_ZeroFill(SR_Canvas *canvas)
 {
     if (!canvas->pixels) return;
 
-    unsigned int size = (
-        (unsigned int)canvas->width *
-        (unsigned int)canvas->height *
-        sizeof(SR_RGBAPixel));
-
-    memset(canvas->pixels, 0, size);
+    memset(canvas->pixels, 0, SR_CanvasCalcSize(canvas));
 }
 
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
@@ -74,11 +71,7 @@ SR_Canvas SR_CopyCanvas(
         new.width    == canvas->width &&
         new.height   == canvas->height)
     {
-        memcpy(new.pixels, canvas->pixels,
-            (unsigned int)new.width *
-            (unsigned int)new.height *
-            sizeof(SR_RGBAPixel)
-        );
+        memcpy(new.pixels, canvas->pixels, SR_CanvasCalcSize(&new));
 
         goto srcc_finish;
     }

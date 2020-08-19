@@ -53,6 +53,15 @@
     // Get the height of a canvas
     unsigned short SR_CanvasGetHeight(SR_Canvas *canvas);
 
+    /* Calculate the "real" size (in memory) of a canvas - not really
+     * recommended to use this yourself.
+     */
+    #define SR_CanvasCalcSize(canvas) ((unsigned int)( \
+        (unsigned int)((canvas)->width)  *             \
+        (unsigned int)((canvas)->height) *             \
+        sizeof(SR_RGBAPixel)                           \
+    ))
+
     /* Calculate the "real" position of a pixel in the canvas - not really
      * recommended to use this yourself.
      */
