@@ -63,11 +63,33 @@
         return temp;
     }
 
-    __inline__ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
-        { return *(uint32_t *) &pix; }
+    #ifdef SURCL_ALLOW_TYPE_PUNNING
+        __inline__ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
+            { return *(uint32_t *) &pix; }
 
-    __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
-        { return *(SR_RGBAPixel *) &pix; }
+        __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
+            { return *(SR_RGBAPixel *) &pix; }
+    #else
+        __inline__ uint32_t SR_RGBAtoWhole(SR_RGBAPixel pix)
+            {
+                return (
+                    (pix.rgb.red        ) |
+                    (pix.rgb.green <<  8) |
+                    (pix.rgb.blue  << 16) |
+                    (pix.alpha     << 24)
+                );
+            }
+
+        __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
+            {
+                SR_RGBAPixel temp;
+                temp.rgb.red   = (pix & 0x000000FF)      ;
+                temp.rgb.green = (pix & 0x0000FF00) >>  8;
+                temp.rgb.blue  = (pix & 0x00FF0000) >> 16;
+                temp.alpha     = (pix & 0xFF000000) >> 24;
+                return temp;
+            } 
+    #endif
 
     // Blend RGBA values
     // Use mode provided by SR_BlendingModes
