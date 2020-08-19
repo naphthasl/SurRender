@@ -66,7 +66,7 @@ SR_Canvas SR_CopyCanvas(
 {
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
-    if (!new.pixels) return new;
+    if (!new.pixels) goto srcc_finish;
 
     if (
         copy_start_x == 0 &&
@@ -79,14 +79,17 @@ SR_Canvas SR_CopyCanvas(
             (unsigned int)new.height *
             sizeof(SR_RGBAPixel)
         );
-    } else {
-        register unsigned short x, y;
-        for (x = 0; x < canvas->width; x++)
-            for (y = 0; y < canvas->height; y++)
-                SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
-                    canvas, x + copy_start_x, y + copy_start_y));
+
+        goto srcc_finish;
     }
 
+    register unsigned short x, y;
+    for (x = 0; x < canvas->width; x++)
+        for (y = 0; y < canvas->height; y++)
+            SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
+                canvas, x + copy_start_x, y + copy_start_y));
+
+srcc_finish:
     return new;
 }
 
