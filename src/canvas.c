@@ -257,22 +257,28 @@ SR_RotatedCanvas SR_CanvasRotate(
     float degrees,
     bool safety_padding)
 {
+    SR_Canvas temp;
+    register unsigned short w, h, boundary, xC, yC, nx, ny;
+    int x, y, nxM, nyM, half_w, half_h;
+    float the_sin, the_cos;
+    SR_RGBAPixel pixel, pixbuf;
+    SR_RotatedCanvas final;
+
     degrees = fmod(degrees, 360);
 
-    SR_Canvas temp;
-    unsigned short w = src->width;
-    unsigned short h = src->height;
+    w = src->width;
+    h = src->height;
 
-    SR_RotatedCanvas final;
+    final.offset_x = 0;
+    final.offset_y = 0;
+
     if (safety_padding) {
-        unsigned short boundary = MAX(w, h) << 1;
+        boundary = MAX(w, h) << 1;
         final.canvas = SR_NewCanvas(boundary, boundary);
         final.offset_x = -(int)(boundary >> 2);
         final.offset_y = -(int)(boundary >> 2);
     } else {
         final.canvas = SR_NewCanvas(w, h);
-        final.offset_x = 0;
-        final.offset_y = 0;
     }
     SR_ZeroFill(&final.canvas);
 
@@ -294,13 +300,11 @@ SR_RotatedCanvas SR_CanvasRotate(
 
     if (w != h) goto srcvrot_mismatch;
 
-    register unsigned short xC, yC;
     for (xC = 0; xC < w; xC++)
     {
         for (yC = 0; yC < h; yC++)
         {
-            SR_RGBAPixel pixbuf = SR_CanvasGetPixel(src, xC, yC);
-            unsigned short nx, ny;
+            pixbuf = SR_CanvasGetPixel(src, xC, yC);
             switch (((unsigned short)degrees) % 360)
             {
                 case 90:
@@ -332,23 +336,20 @@ srcvrot_mismatch:
     // Convert to radians and then modulo by 2*pi
     degrees = fmod(degrees * 0.017453292519943295, 6.28318530718);
 
-    float the_sin = -sin(degrees);
-    float the_cos = cos(degrees);
-    int half_w = w >> 1;
-    int half_h = h >> 1;
-    
-    int x, y, nx, ny;
-    SR_RGBAPixel pixel;
+    the_sin = -sin(degrees);
+    the_cos = cos(degrees);
+    half_w = w >> 1;
+    half_h = h >> 1;
 
     for (x = -half_w; x < half_w; x++) {
         for (y = -half_h; y < half_h; y++) {
-            nx = (x * the_cos + y * the_sin + half_w) - final.offset_x;
-            ny = (y * the_cos - x * the_sin + half_h) - final.offset_y;
+            nxM = (x * the_cos + y * the_sin + half_w) - final.offset_x;
+            nyM = (y * the_cos - x * the_sin + half_h) - final.offset_y;
             pixel = SR_CanvasGetPixel(src, x + half_w, y + half_h);
 
             // Set target AND a single nearby pixel to de-alias
-            SR_CanvasSetPixel(&final.canvas, nx    , ny    , pixel);
-            SR_CanvasSetPixel(&final.canvas, nx - 1, ny    , pixel);
+            SR_CanvasSetPixel(&final.canvas, nxM    , nyM    , pixel);
+            SR_CanvasSetPixel(&final.canvas, nxM - 1, nyM    , pixel);
         }
     }
 
