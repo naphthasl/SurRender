@@ -306,7 +306,8 @@ SR_OffsetCanvas SR_CanvasShear(
 SR_OffsetCanvas SR_CanvasRotate(
     SR_Canvas *src,
     float degrees,
-    bool safety_padding)
+    bool safety_padding,
+    bool autocrop)
 {
     SR_Canvas temp;
     register unsigned short w, h, boundary, xC, yC, nx, ny;
@@ -408,7 +409,7 @@ srcvrot_mismatch:
     }
 
 srcvrot_finished:
-    if (safety_padding)
+    if (safety_padding && autocrop)
     {
         unsigned short * bbox = SR_NZBoundingBox(&final.canvas);
         if (bbox)

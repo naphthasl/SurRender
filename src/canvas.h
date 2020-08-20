@@ -191,11 +191,16 @@
      * placed on-screen.
      * 
      * Will malloc a new canvas!
+     * 
+     * NEW: Autocrop option will automatically crop a padded rotated canvas
+     * in order to remove extra space. Useful for feeding rotated canvases
+     * into the rotation function.
      */
     SR_OffsetCanvas SR_CanvasRotate(
         SR_Canvas *src,
         float degrees,
-        bool safety_padding);
+        bool safety_padding,
+        bool autocrop);
 
     /* Flip the target canvas - does not malloc, works in-place.
      * Enable vertical to flip vertically. Leave disabled for horizontal.

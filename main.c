@@ -60,11 +60,11 @@ int main(void)
     char filename[] = "TEST_SM.BMP";
     SR_Canvas tempbox0 = SR_ImageFileToCanvas(filename);
     SR_Canvas tempbox1 = SR_ImageFileToCanvas(filename);
-    tempbox1 = SR_CanvasRotate(&tempbox1, 90, 0).canvas;
+    tempbox1 = SR_CanvasRotate(&tempbox1, 90, 0, 0).canvas;
     SR_Canvas tempbox2 = SR_ImageFileToCanvas(filename);
-    tempbox2 = SR_CanvasRotate(&tempbox2, 180, 0).canvas;
+    tempbox2 = SR_CanvasRotate(&tempbox2, 180, 0, 0).canvas;
     SR_Canvas tempbox3 = SR_ImageFileToCanvas(filename);
-    tempbox3 = SR_CanvasRotate(&tempbox3, 270, 0).canvas;
+    tempbox3 = SR_CanvasRotate(&tempbox3, 270, 0, 0).canvas;
     SR_MergeCanvasIntoCanvas(&boxes, &tempbox0,  2,  2, 255, SR_BLEND_REPLACE);
     SR_MergeCanvasIntoCanvas(&boxes, &tempbox1, 42,  2, 255, SR_BLEND_REPLACE);
     SR_MergeCanvasIntoCanvas(&boxes, &tempbox2, 82,  2, 255, SR_BLEND_REPLACE);
@@ -193,7 +193,7 @@ event_loop:
     );
     
     speeen += 1;
-    rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1);
+    rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1, 0);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),
         128 + rotcanvas.offset_x, 128 + rotcanvas.offset_y,
