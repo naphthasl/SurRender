@@ -77,8 +77,8 @@ SR_Canvas SR_CopyCanvas(
     }
 
     register unsigned short x, y;
-    for (x = 0; x < canvas->width; x++)
-        for (y = 0; y < canvas->height; y++)
+    for (x = 0; x < new.width; x++)
+        for (y = 0; y < new.height; y++)
             SR_CanvasSetPixel(&new, x, y, SR_CanvasGetPixel(
                 canvas, x + copy_start_x, y + copy_start_y));
 
@@ -193,6 +193,64 @@ SR_Canvas SR_CanvasScale(
     return final;
 }
 
+unsigned short * SR_NZBoundingBox(SR_Canvas *src)
+{
+    // Static declaration prevents a dangling pointer
+    static unsigned short bbox[4] = {0, 0, 0, 0};
+
+    register unsigned short x, y, xC, yC, Xdet, Ydet;
+    for (x = 0; x < src->width; x++)
+    {
+        for (y = 0; y < src->height; y++)
+        {
+            Xdet = 0; Ydet = 0;
+
+            for (xC = x; xC < src->width; xC++)
+                { if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet++; } }
+
+            for (yC = y; yC < src->height; yC++)
+                { if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet++; } }
+
+            if (Xdet > 0 && Ydet > 0) goto srnzbbx_found_first;
+        }
+    }
+
+    goto srnzbbx_empty;
+srnzbbx_found_first:
+    bbox[0] = x; bbox[1] = y;
+
+    for (x = src->width - 1; x >= bbox[0]; x--)
+    {
+        for (y = src->height - 1; y >= bbox[1]; y--)
+        {
+            Xdet = 0; Ydet = 0;
+
+            for (xC = x; xC >= bbox[0]; xC--)
+                { if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet++; } }
+                
+            for (yC = y; yC >= bbox[1]; yC--)
+                { if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet++; } }
+
+            if (Xdet > 0 && Ydet > 0) goto srnzbbx_found_last;
+        }
+    }
+
+    goto srnzbbx_no_end_in_sight;
+srnzbbx_no_end_in_sight:
+    bbox[2] = src->width - 1; bbox[3] = src->height - 1;
+
+    goto srnzbbx_bounded;
+srnzbbx_found_last:
+    bbox[2] = x; bbox[3] = y;
+srnzbbx_bounded:
+    return bbox;
+srnzbbx_empty:
+    /* We can return a null pointer if we believe the canvas is empty, making
+     * it easier to check the state of a canvas.
+     */
+    return NULL;
+}
+
 SR_OffsetCanvas SR_CanvasShear(
         SR_Canvas *src,
         int skew_amount,
@@ -265,7 +323,8 @@ SR_OffsetCanvas SR_CanvasRotate(
     final.offset_x = 0;
     final.offset_y = 0;
 
-    if (safety_padding) {
+    if (safety_padding)
+    {
         boundary = MAX(w, h) << 1;
         final.canvas = SR_NewCanvas(boundary, boundary);
         final.offset_x = -(int)(boundary >> 2);
@@ -334,8 +393,10 @@ srcvrot_mismatch:
     half_w = w >> 1;
     half_h = h >> 1;
 
-    for (x = -half_w; x < half_w; x++) {
-        for (y = -half_h; y < half_h; y++) {
+    for (x = -half_w; x < half_w; x++)
+    {
+        for (y = -half_h; y < half_h; y++)
+        {
             nxM = (x * the_cos + y * the_sin + half_w) - final.offset_x;
             nyM = (y * the_cos - x * the_sin + half_h) - final.offset_y;
             pixel = SR_CanvasGetPixel(src, x + half_w, y + half_h);
@@ -347,6 +408,27 @@ srcvrot_mismatch:
     }
 
 srcvrot_finished:
+    if (safety_padding)
+    {
+        unsigned short * bbox = SR_NZBoundingBox(&final.canvas);
+        if (bbox)
+        {
+            temp = SR_CopyCanvas(
+                &final.canvas,
+                bbox[0],
+                bbox[1],
+                (bbox[2] - bbox[0]) + 1,
+                (bbox[3] - bbox[1]) + 1
+            );
+
+            SR_DestroyCanvas(&final.canvas);
+            final.canvas = temp;
+
+            final.offset_x += bbox[0];
+            final.offset_y += bbox[1];
+        }
+    }
+
     return final;
 }
 

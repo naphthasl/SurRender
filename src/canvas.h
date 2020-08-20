@@ -103,6 +103,10 @@
         ];
     }
 
+    // Check if a pixel is non-zero, hopefully
+    #define SR_CanvasPixelCNZ(canvas, x, y) \
+    (SR_RGBAtoWhole(SR_CanvasGetPixel((canvas), (x), (y))) != 0)
+
     /* Destroy the in-memory representation of the canvas
      * (Must create a new canvas or resize the current one in order to access)
      */
@@ -152,6 +156,19 @@
         unsigned short newHeight,
         char mode);
     
+    /* Returns a pointer to a static array containing 4 unsigned shorts.
+     * The first 2 values are the x, y coordinates of the top left of the
+     * bounding box. The last 2 values are the x, y coordinates of the bottom
+     * right of the bounding box.
+     * 
+     * If the canvas is empty, returns a null pointer.
+     * 
+     * The bounding box is created when a non-zero value is found.
+     * 
+     * Note that this is a particularly slow operation.
+     */
+    unsigned short * SR_NZBoundingBox(SR_Canvas *src);
+
     /* Returns a canvas with the input canvas's content skewed
      * set mode for vertical shearing, else turn off for horizontal
      * 
