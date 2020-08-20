@@ -225,48 +225,40 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
     // Static declaration prevents a dangling pointer
     static unsigned short bbox[4] = {0, 0, 0, 0};
 
-    register unsigned short x, y, xC, yC, Xdet, Ydet;
-    for (x = 0; x < src->width; x++)
+    register unsigned short D, xC, yC, Xdet, Ydet, Dmax, Emax;
+    Dmax = MIN(src->width, src->height);
+    for (D = 0; D < Dmax; D++)
     {
+        /* When iterating over each pixel, we can find out if the
+            * "continuation" rows and columns contain anything.
+            */
         Xdet = 0; Ydet = 0;
-        for (y = 0; y < src->height; y++)
-        {
-            /* When iterating over each pixel, we can find out if the
-             * "continuation" rows and columns contain anything.
-             */
-            if (Xdet == 0)
-                for (xC = x; xC < src->width; xC++)
-                    if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet = 1; break; }
+        for (xC = D; xC < src->width; xC++)
+            if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
 
-            if (Ydet == 0)
-                for (yC = y; yC < src->height; yC++)
-                    if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet = 1; break; }
+        for (yC = D; yC < src->height; yC++)
+            if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
 
-            // We've found a corner of the bounding box, huzzah! (do next one)
-            if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_first;
-        }
+        // We've found a corner of the bounding box, huzzah! (do next one)
+        if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_first;
     }
 
     goto srnzbbx_empty; // No data found in image - commit die
 srnzbbx_found_first:
-    bbox[0] = x; bbox[1] = y; // Set the first point if found
+    bbox[0] = D; bbox[1] = D; // Set the first point if found
 
-    for (x = src->width - 1; x >= bbox[0]; x--)
+    Emax = MAX(bbox[0], bbox[1]);
+    for (D = Dmax - 1; D >= Emax; D--)
     {
         Xdet = 0; Ydet = 0;
-        for (y = src->height - 1; y >= bbox[1]; y--)
-        {
-            if (Xdet == 0)
-                for (xC = x; xC >= bbox[0]; xC--)
-                    if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet = 1; break; }
-                
-            if (Ydet == 0)
-                for (yC = y; yC >= bbox[1]; yC--)
-                    if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet = 1; break; }
+        for (xC = D; xC >= bbox[0]; xC--)
+            if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
+        
+        for (yC = D; yC >= bbox[1]; yC--)
+            if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
 
-            // Have we found the last point yet?
-            if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_last;
-        }
+        // Have we found the last point yet?
+        if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_last;
     }
 
     goto srnzbbx_no_end_in_sight; // No last point found - is this possible?
@@ -275,7 +267,7 @@ srnzbbx_no_end_in_sight:
 
     goto srnzbbx_bounded;
 srnzbbx_found_last:
-    bbox[2] = x; bbox[3] = y; // Set the final points
+    bbox[2] = D; bbox[3] = D; // Set the final points
 srnzbbx_bounded:
     return bbox; // Return the box (er, I mean RETURN THE SLAB)
 srnzbbx_empty:
