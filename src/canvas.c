@@ -224,10 +224,7 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 
     // Static declaration prevents a dangling pointer
     static unsigned short bbox[4] = {0, 0, 0, 0};
-
-    register unsigned short xC, yC, Xdet, Ydet, firstX, firstY, lastX, lastY;
-    register unsigned short x, y;
-    int dx, dy, err, sx, sy, e2, x0, y0, x1, y1;
+    register unsigned short xC, yC, firstX, firstY, lastX, lastY, x, y;
 
     for (y = 0; y < src->height; y++)
         for (x = 0; x < src->width; x++)
