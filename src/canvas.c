@@ -219,7 +219,7 @@ SR_Canvas SR_CanvasScale(
 
 unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 {
-    // TODO: Improve performance here somehow
+    // TODO: Test this for bugs
     // TODO: Find some way to clean up the repetition here
 
     // Static declaration prevents a dangling pointer
