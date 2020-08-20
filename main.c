@@ -149,7 +149,6 @@ event_loop:
         }
     }
 
-    
     for (x = 0; x <= canvy.width - 1; x++) {
         for (y = 0; y <= canvy.height - 1; y++) {
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
@@ -192,6 +191,9 @@ event_loop:
         rand() % (canvy.height)
     );
     
+    // temp
+    //SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 1366, 768);
+
     speeen += 1;
     rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1, 1);
     SR_MergeCanvasIntoCanvas(

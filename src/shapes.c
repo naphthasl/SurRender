@@ -20,18 +20,12 @@ void SR_DrawLine(
     for (;;)
     {
         SR_CanvasSetPixel(canvas, x0, y0, colour);
+        
         if (x0 == x1 && y0 == y1) break;
+
         e2 = err << 1;
-        if (e2 >= dy)
-        {
-            err += dy;
-            x0 += sx;
-        }
-        if (e2 <= dx)
-        {
-            err += dx;
-            y0 += sy;
-        }
+        if (e2 >= dy) { err += dy; x0 += sx; }
+        if (e2 <= dx) { err += dx; y0 += sy; }
     }
 }
 
