@@ -249,7 +249,7 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 srnzbbx_found_first:
     bbox[0] = D; bbox[1] = D; // Set the first point if found
 
-    Emax = MAX(bbox[0], bbox[1]);
+    Emax = MIN(bbox[0], bbox[1]);
     Xdet = 0; Ydet = 0;
     for (D = Dmax - 1; D >= Emax; D--)
     {
