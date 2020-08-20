@@ -193,10 +193,11 @@ event_loop:
     );
     
     speeen += 1;
-    rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1, 0);
+    rotcanvas = SR_CanvasRotate(&imagetest, speeen, 1, 1);
     SR_MergeCanvasIntoCanvas(
         &canvy, &(rotcanvas.canvas),
-        128 + rotcanvas.offset_x, 128 + rotcanvas.offset_y,
+        //128 + rotcanvas.offset_x, 128 + rotcanvas.offset_y,
+        0, 0,
         255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&(rotcanvas.canvas));
     

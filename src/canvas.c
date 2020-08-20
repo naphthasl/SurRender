@@ -199,19 +199,20 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
     static unsigned short bbox[4] = {0, 0, 0, 0};
 
     register unsigned short x, y, xC, yC, Xdet, Ydet;
-    for (x = 0; x < src->width; x++)
+    for (y = 0; y < src->height; y++)
     {
-        for (y = 0; y < src->height; y++)
+        Xdet = 0; Ydet = 0;
+        for (x = 0; x < src->width; x++)
         {
-            Xdet = 0; Ydet = 0;
+            if (Xdet == 0)
+                for (xC = x; xC < src->width; xC++)
+                    if (SR_CanvasPixelCNZ(src, xC, y)) Xdet++;
 
-            for (xC = x; xC < src->width; xC++)
-                { if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet++; } }
+            if (Ydet == 0)
+                for (yC = y; yC < src->height; yC++)
+                    if (SR_CanvasPixelCNZ(src, x, yC)) Ydet++;
 
-            for (yC = y; yC < src->height; yC++)
-                { if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet++; } }
-
-            if (Xdet > 0 && Ydet > 0) goto srnzbbx_found_first;
+            if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_first;
         }
     }
 
@@ -219,19 +220,20 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 srnzbbx_found_first:
     bbox[0] = x; bbox[1] = y;
 
-    for (x = src->width - 1; x >= bbox[0]; x--)
+    for (y = src->height - 1; y >= bbox[1]; y--)
     {
-        for (y = src->height - 1; y >= bbox[1]; y--)
+        Xdet = 0; Ydet = 0;
+        for (x = src->width - 1; x >= bbox[0]; x--)
         {
-            Xdet = 0; Ydet = 0;
-
-            for (xC = x; xC >= bbox[0]; xC--)
-                { if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet++; } }
+            if (Xdet == 0)
+                for (xC = x; xC >= bbox[0]; xC--)
+                    if (SR_CanvasPixelCNZ(src, xC, y)) Xdet++;
                 
-            for (yC = y; yC >= bbox[1]; yC--)
-                { if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet++; } }
+            if (Ydet == 0)
+                for (yC = y; yC >= bbox[1]; yC--)
+                    if (SR_CanvasPixelCNZ(src, x, yC)) Ydet++;
 
-            if (Xdet > 0 && Ydet > 0) goto srnzbbx_found_last;
+            if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_last;
         }
     }
 
