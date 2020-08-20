@@ -257,8 +257,6 @@ srnzbbx_found_first:
     goto srnzbbx_no_end_in_sight; // No last point found - is this possible?
 srnzbbx_no_end_in_sight:
     bbox[2] = src->width - 1; bbox[3] = src->height - 1;
-
-    goto srnzbbx_bounded;
 srnzbbx_bounded:
     return bbox; // Return the box (er, I mean RETURN THE SLAB)
 srnzbbx_empty:
