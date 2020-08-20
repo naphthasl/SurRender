@@ -2,6 +2,9 @@
 #define SURCL_HEADER_FILE
     #include "glbl.h"
 
+    // Colours must be stored in little endian format
+    #pragma scalar_storage_order little-endian
+
     typedef struct SR_RGBPixel {
         uint8_t red;
         uint8_t green;
