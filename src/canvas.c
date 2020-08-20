@@ -7,13 +7,20 @@ bool SR_ResizeCanvas(
     unsigned short width,
     unsigned short height)
 {
+    // It is impossible to create a 0-width/0-height canvas.
     if (!width || !height) return false;
 
     canvas->width = width;
     canvas->height = height;
     
+    // Not strictly neccessary, but rodger put it here anyway, so whatever.
     canvas->ratio = (float)width / height;
 
+    /* FYI: We can actually use realloc here if we assume that canvas->pixels
+     * contains either a valid allocation or none at all (represented by NULL)
+     * That way, we can simplify the whole process, as realloc works just like
+     * malloc does when you feed it a null pointer. Magic!
+     */
     canvas->pixels = realloc(
         canvas->pixels,
         (unsigned int)(
@@ -23,6 +30,7 @@ bool SR_ResizeCanvas(
         )
     );
 
+    // Return the allocation state.
     return BOOLIFY(canvas->pixels);
 }
 
@@ -30,27 +38,34 @@ void SR_ZeroFill(SR_Canvas *canvas)
 {
     if (!canvas->pixels) return;
 
+    // Fill the canvas with zeros, resulting in RGBA(0, 0, 0, 0).
+    // To fill with something like RGBA(0, 0, 0, 255), see shapes.h.
     memset(canvas->pixels, 0, SR_CanvasCalcSize(canvas));
 }
 
 SR_Canvas SR_NewCanvas(unsigned short width, unsigned short height)
 {
     SR_Canvas temp;
-    temp.pixels = NULL;
+    temp.pixels = NULL; // Just for realloc's sake.
+
+    // As long as we set pixels to NULL, ResizeCanvas can be used here too.
     SR_ResizeCanvas(&temp, width, height);
 
     return temp;
 }
 
+// Just some abstraction functions - may be macro'd later.
 unsigned short SR_CanvasGetWidth(SR_Canvas *canvas)
     { return canvas->width; }
 
 unsigned short SR_CanvasGetHeight(SR_Canvas *canvas)
     { return canvas->height; }
 
+// SR_DestroyCanvas is super important for any mallocated canvases. Use it.
 void SR_DestroyCanvas(SR_Canvas *canvas)
     { if (canvas->pixels) { free(canvas->pixels); canvas->pixels = NULL; } }
 
+// Check if a canvas has been destroyed - i.e it's a null pointer
 bool SR_CanvasIsValid(SR_Canvas *canvas)
     { return BOOLIFY(canvas->pixels); }
 
@@ -61,8 +76,10 @@ SR_Canvas SR_CopyCanvas(
     unsigned short new_width,
     unsigned short new_height)
 {
+    // Create the destination canvas
     SR_Canvas new = SR_NewCanvas(new_width, new_height);
 
+    // If it isn't valid, just return the metadata and pray it doesn't get used
     if (!new.pixels) goto srcc_finish;
 
     if (
@@ -71,11 +88,13 @@ SR_Canvas SR_CopyCanvas(
         new.width    == canvas->width &&
         new.height   == canvas->height)
     {
+        // Super fast memcpy when possible, hopefully.
         memcpy(new.pixels, canvas->pixels, SR_CanvasCalcSize(&new));
 
-        goto srcc_finish;
+        goto srcc_finish; // Just jump to finish here, saves ident level
     }
 
+    // Slower copying, but not much slower - used for cropping/panning
     register unsigned short x, y;
     for (x = 0; x < new.width; x++)
         for (y = 0; y < new.height; y++)
@@ -99,6 +118,7 @@ void SR_MergeCanvasIntoCanvas(
     {
         for (y = 0; y < src_canvas->height; y++)
         {
+            // Uses the function for blending individual RGBA values.
             SR_CanvasSetPixel(
                 dest_canvas,
                 x + paste_start_x,
@@ -144,6 +164,8 @@ SR_Canvas SR_BilinearCanvasScale(
         int gxi = (int)gx;
         int gyi = (int)gy;
 
+        // TODO: Clean this up, preferably stop using SR_RGBAtoWhole, it's slow
+
         uint32_t c00 = SR_RGBAtoWhole(
             SR_CanvasGetPixel(src, gxi    , gyi    ));
         uint32_t c10 = SR_RGBAtoWhole(
@@ -177,6 +199,8 @@ SR_Canvas SR_CanvasScale(
     unsigned short newHeight,
     char mode)
 {
+    // TODO: Add nearest neighbour scaling - this is super, super important
+
     SR_Canvas final;
     switch (mode)
     {
@@ -195,6 +219,9 @@ SR_Canvas SR_CanvasScale(
 
 unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 {
+    // TODO: Improve performance here somehow
+    // TODO: Find some way to clean up the repetition here
+
     // Static declaration prevents a dangling pointer
     static unsigned short bbox[4] = {0, 0, 0, 0};
 
@@ -204,21 +231,25 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
         Xdet = 0; Ydet = 0;
         for (y = 0; y < src->height; y++)
         {
+            /* When iterating over each pixel, we can find out if the
+             * "continuation" rows and columns contain anything.
+             */
             if (Xdet == 0)
                 for (xC = x; xC < src->width; xC++)
-                    if (SR_CanvasPixelCNZ(src, xC, y)) Xdet = 1;
+                    if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet = 1; break; }
 
             if (Ydet == 0)
                 for (yC = y; yC < src->height; yC++)
-                    if (SR_CanvasPixelCNZ(src, x, yC)) Ydet = 1;
+                    if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet = 1; break; }
 
+            // We've found a corner of the bounding box, huzzah! (do next one)
             if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_first;
         }
     }
 
-    goto srnzbbx_empty;
+    goto srnzbbx_empty; // No data found in image - commit die
 srnzbbx_found_first:
-    bbox[0] = x; bbox[1] = y;
+    bbox[0] = x; bbox[1] = y; // Set the first point if found
 
     for (x = src->width - 1; x >= bbox[0]; x--)
     {
@@ -227,25 +258,26 @@ srnzbbx_found_first:
         {
             if (Xdet == 0)
                 for (xC = x; xC >= bbox[0]; xC--)
-                    if (SR_CanvasPixelCNZ(src, xC, y)) Xdet = 1;
+                    if (SR_CanvasPixelCNZ(src, xC, y)) { Xdet = 1; break; }
                 
             if (Ydet == 0)
                 for (yC = y; yC >= bbox[1]; yC--)
-                    if (SR_CanvasPixelCNZ(src, x, yC)) Ydet = 1;
+                    if (SR_CanvasPixelCNZ(src, x, yC)) { Ydet = 1; break; }
 
+            // Have we found the last point yet?
             if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_last;
         }
     }
 
-    goto srnzbbx_no_end_in_sight;
+    goto srnzbbx_no_end_in_sight; // No last point found - is this possible?
 srnzbbx_no_end_in_sight:
     bbox[2] = src->width - 1; bbox[3] = src->height - 1;
 
     goto srnzbbx_bounded;
 srnzbbx_found_last:
-    bbox[2] = x; bbox[3] = y;
+    bbox[2] = x; bbox[3] = y; // Set the final points
 srnzbbx_bounded:
-    return bbox;
+    return bbox; // Return the box (er, I mean RETURN THE SLAB)
 srnzbbx_empty:
     /* We can return a null pointer if we believe the canvas is empty, making
      * it easier to check the state of a canvas.
@@ -277,6 +309,8 @@ SR_OffsetCanvas SR_CanvasShear(
     final.offset_y = mode ? -skew_amount : 0;
 
     int mshift;
+
+    // TODO: Find some way to clean up the repetition here
 
     if (mode)
     {
@@ -311,6 +345,7 @@ SR_OffsetCanvas SR_CanvasRotate(
     bool safety_padding,
     bool autocrop)
 {
+    // Declare everything here
     SR_Canvas temp;
     register unsigned short w, h, boundary, xC, yC, nx, ny;
     int x, y, nxM, nyM, half_w, half_h;
@@ -318,8 +353,10 @@ SR_OffsetCanvas SR_CanvasRotate(
     SR_RGBAPixel pixel, pixbuf;
     SR_OffsetCanvas final;
 
+    // There's no point in considering unique values above 359. 360 -> 0
     degrees = fmod(degrees, 360);
 
+    // For simplicity's sake
     w = src->width;
     h = src->height;
 
@@ -328,33 +365,43 @@ SR_OffsetCanvas SR_CanvasRotate(
 
     if (safety_padding)
     {
-        boundary = MAX(w, h) << 1;
+        // Create additional padding in case rotated data goes off-canvas
+        boundary = MAX(w, h) << 1; // Double the largest side length
         final.canvas = SR_NewCanvas(boundary, boundary);
         final.offset_x = -(int)(boundary >> 2);
         final.offset_y = -(int)(boundary >> 2);
     } else {
         final.canvas = SR_NewCanvas(w, h);
     }
+    // Prevent garbage data seeping in
     SR_ZeroFill(&final.canvas);
 
+    // Rotation not 0, 90, 180 or 270 degrees? Use inaccurate method instead
     if (fmod(degrees, 90) != .0) goto srcvrot_mismatch;
 
+    // Trying to rotate 0 degrees? Just copy the canvas, I guess.
     if (!((unsigned short)degrees % 360))
     {
         SR_MergeCanvasIntoCanvas(
             &final.canvas,
             src,
-            -final.offset_x,
+            -final.offset_x, // Still need to use the offset incase padding
             -final.offset_y,
             255,
-            SR_BLEND_REPLACE
+            SR_BLEND_REPLACE // Fastest and safest, also no background alpha
         );
 
-        goto srcvrot_finished;
+        goto srcvrot_finished; // Jump to the finishing/cleanup line
     }
 
+    /* TODO: Mismatching width and height causes accurate rotation bug.
+     * We should probably fix this, but for now it's fine to use inaccurate
+     * rotation.
+     */
     if (w != h) goto srcvrot_mismatch;
 
+    // This is the accurate rotation system, but it only works on degrees
+    // where x % 90 == 0
     for (xC = 0; xC < w; xC++)
     {
         for (yC = 0; yC < h; yC++)
@@ -378,7 +425,7 @@ SR_OffsetCanvas SR_CanvasRotate(
 
             SR_CanvasSetPixel(
                 &final.canvas,
-                nx - final.offset_x,
+                nx - final.offset_x, // Correct for offset
                 ny - final.offset_y,
                 pixbuf
             );
@@ -413,6 +460,8 @@ srcvrot_mismatch:
 srcvrot_finished:
     if (safety_padding && autocrop)
     {
+        // If autocropping is enabled, auto-crop padded images. This is slow,
+        // but saves memory.
         unsigned short * bbox = SR_NZBoundingBox(&final.canvas);
         if (bbox)
         {
@@ -437,6 +486,9 @@ srcvrot_finished:
 
 void SR_InplaceFlip(SR_Canvas *src, bool vertical)
 {
+    // Flipping canvases honestly doesn't need a new canvas to be allocated,
+    // so we can do it in-place just fine for extra speed and less memory
+    // usage.
     register unsigned short x, y, wmax, hmax, xdest, ydest;
     SR_RGBAPixel temp, pixel;
 
