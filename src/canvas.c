@@ -227,17 +227,19 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
 
     register unsigned short D, xC, yC, Xdet, Ydet, Dmax, Emax;
     Dmax = MIN(src->width, src->height);
+    Xdet = 0; Ydet = 0;
     for (D = 0; D < Dmax; D++)
     {
         /* When iterating over each pixel, we can find out if the
             * "continuation" rows and columns contain anything.
             */
-        Xdet = 0; Ydet = 0;
-        for (xC = D; xC < src->width; xC++)
-            if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
+        if (Xdet == 0)
+            for (xC = D; xC < src->width; xC++)
+                if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
 
-        for (yC = D; yC < src->height; yC++)
-            if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
+        if (Ydet == 0)
+            for (yC = D; yC < src->height; yC++)
+                if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
 
         // We've found a corner of the bounding box, huzzah! (do next one)
         if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_first;
@@ -248,14 +250,16 @@ srnzbbx_found_first:
     bbox[0] = D; bbox[1] = D; // Set the first point if found
 
     Emax = MAX(bbox[0], bbox[1]);
+    Xdet = 0; Ydet = 0;
     for (D = Dmax - 1; D >= Emax; D--)
     {
-        Xdet = 0; Ydet = 0;
-        for (xC = D; xC >= bbox[0]; xC--)
-            if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
+        if (Xdet == 0)
+            for (xC = D; xC >= bbox[0]; xC--)
+                if (SR_CanvasPixelCNZ(src, xC, D)) { Xdet = 1; break; }
         
-        for (yC = D; yC >= bbox[1]; yC--)
-            if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
+        if (Ydet == 0)
+            for (yC = D; yC >= bbox[1]; yC--)
+                if (SR_CanvasPixelCNZ(src, D, yC)) { Ydet = 1; break; }
 
         // Have we found the last point yet?
         if (Xdet != 0 && Ydet != 0) goto srnzbbx_found_last;
