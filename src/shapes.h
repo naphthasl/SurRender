@@ -55,9 +55,9 @@
     void SR_DrawCircOutline(
         SR_Canvas *canvas,
         SR_RGBAPixel colour,
-        int x,
-        int y,
-        int r);
+        unsigned short x,
+        unsigned short y,
+        unsigned short r);
     
     void SR_DrawCirc(
         SR_Canvas *canvas,
