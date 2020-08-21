@@ -149,6 +149,7 @@ event_loop:
 
     static float minX = -2.0;
     static float maxX = 1.0;
+    static float pos = 0;
     float yScale = (((float)maxX-minX) *
         ((float)canvy.height / canvy.width) * canvy.ratio);
 
@@ -161,6 +162,8 @@ event_loop:
             float complex c = (
                 ((float)minX + x * (float)(maxX - minX) / (float)canvy.width) +
                 (y * yScale / canvy.height - yScale / 2.0) * I);
+
+            c -= pos * 2; c /= (pos + 1);
             float complex z = c;
 
             size_t zC;
@@ -174,12 +177,10 @@ event_loop:
                 shades[zC],
                 shades[zC],
                 shades[zC],
-                255
-            ));
+                255));
         }
     }
-    minX += 0.001;
-    maxX -= 0.006;
+    pos += 1;
 
     /*
     SR_DrawLine(
