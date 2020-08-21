@@ -8,10 +8,8 @@
 void SR_DrawLine(
     SR_Canvas *canvas,
     SR_RGBAPixel colour,
-    int x0,
-    int y0, 
-    int x1, 
-    int y1)
+    int x0, int y0, 
+    int x1, int y1)
 {
     int dx, dy, err, sx, sy, e2;
     dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
