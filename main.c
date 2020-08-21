@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include "src/surrender.h"
+#include <complex.h>
 
 #if defined(__i386__)
 
@@ -119,9 +120,6 @@ int main(void)
         goto sdl_freesurf;
     }
 
-    // For test
-    unsigned short x, y, z;
-
 event_loop:
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) {
@@ -149,18 +147,41 @@ event_loop:
         }
     }
 
-    for (x = 0; x <= canvy.width - 1; x++) {
-        for (y = 0; y <= canvy.height - 1; y++) {
+    static float minX = -2.0;
+    static float maxX = 1.0;
+    float yScale = (((float)maxX-minX) *
+        ((float)canvy.height / canvy.width) * canvy.ratio);
+
+    uint8_t shades[] = {
+        0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210,
+        225, 240, 255};
+
+    for (unsigned short x = 0; x < canvy.width; x++) {
+        for (unsigned short y = 0; y < canvy.height; y++) {
+            float complex c = (
+                ((float)minX + x * (float)(maxX - minX) / (float)canvy.width) +
+                (y * yScale / canvy.height - yScale / 2.0) * I);
+            float complex z = c;
+
+            size_t zC;
+            for (zC = 0; zC < sizeof(shades); zC++) {
+                if (abs(z) > 2) break;
+
+                z = z * z + c;
+            }
+
             SR_CanvasSetPixel(&canvy, x, y, SR_CreateRGBA(
-                x,
-                y,
-                z,
+                shades[zC],
+                shades[zC],
+                shades[zC],
                 255
             ));
         }
     }
-    z++;
+    minX += 0.001;
+    maxX -= 0.006;
 
+    /*
     SR_DrawLine(
         &canvy,
         SR_RGBABlender(
@@ -212,7 +233,8 @@ event_loop:
     SR_DestroyCanvas(&(squish.canvas));
     
     SR_MergeCanvasIntoCanvas(&canvy, &boxes, 0, 0, 255, SR_BLEND_ADDITIVE);
-    
+    */
+
     /* update the canvas here, the rest is
        actually blitting it to the window */
     
