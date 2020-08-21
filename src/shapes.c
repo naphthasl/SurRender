@@ -118,3 +118,29 @@ void SR_DrawRect(
         }
     }
 }
+
+void SR_DrawCircOutline(
+    SR_Canvas *canvas,
+    SR_RGBAPixel colour,
+    int x,
+    int y,
+    int r)
+{
+    int xs = r;
+    int ys = 0;
+    int er = 0;
+    
+    while (xs >= ys) {
+        SR_CanvasSetPixel(canvas, x + xs, y + ys, colour);
+        SR_CanvasSetPixel(canvas, x + ys, y + xs, colour);
+        SR_CanvasSetPixel(canvas, x - ys, y + xs, colour);
+        SR_CanvasSetPixel(canvas, x - xs, y + ys, colour);
+        SR_CanvasSetPixel(canvas, x - xs, y - ys, colour);
+        SR_CanvasSetPixel(canvas, x - ys, y - xs, colour);
+        SR_CanvasSetPixel(canvas, x + ys, y - xs, colour);
+        SR_CanvasSetPixel(canvas, x + xs, y - ys, colour);
+        
+        if (er <= 0) { ys++; er += (ys << 1) + 1; }
+        if (er >  0) { xs--; er -= (xs << 1) + 1; }
+    }
+}

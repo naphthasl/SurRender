@@ -181,7 +181,7 @@ event_loop:
         }
     }
     pos += 1;
-
+    SR_DrawCircOutline(&canvy, SR_CreateRGBA(255, 0, 0, 255), pos, pos, 69);
     /*
     SR_DrawLine(
         &canvy,
