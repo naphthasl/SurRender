@@ -160,7 +160,7 @@ event_loop:
     SR_MergeCanvasIntoCanvas(
         &canvy, &temp,
         0, 0,
-        255, SR_BLEND_REPLACE);
+        255, SR_BLEND_ADDITIVE);
     SR_DestroyCanvas(&temp);
     mod++;
 
