@@ -81,11 +81,8 @@
     {
         if (!canvas->pixels) return;
 
-        canvas->pixels[
-            SR_CanvasCalcPosition(
-                canvas, x % canvas->width, y % canvas->height
-            )
-        ] = pixel;
+        canvas->pixels[SR_CanvasCalcPosition(
+            canvas, x % canvas->width, y % canvas->height) ] = pixel;
     }
 
     // Get a pixel in the canvas
@@ -96,11 +93,8 @@
     {
         if (!canvas->pixels) { return SR_CreateRGBA(255, 0, 0, 255); }
 
-        return canvas->pixels[
-            SR_CanvasCalcPosition(
-                canvas, x % canvas->width, y % canvas->height
-            )
-        ];
+        return canvas->pixels[SR_CanvasCalcPosition(
+            canvas, x % canvas->width, y % canvas->height)];
     }
 
     // Check if a pixel is non-zero, hopefully

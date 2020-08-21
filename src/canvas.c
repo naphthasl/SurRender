@@ -26,9 +26,7 @@ bool SR_ResizeCanvas(
         (unsigned int)(
             (unsigned int)width *
             (unsigned int)height *
-            sizeof(SR_RGBAPixel)
-        )
-    );
+            sizeof(SR_RGBAPixel)));
 
     // Return the allocation state.
     return BOOLIFY(canvas->pixels);
@@ -82,12 +80,10 @@ SR_Canvas SR_CopyCanvas(
     // If it isn't valid, just return the metadata and pray it doesn't get used
     if (!new.pixels) goto srcc_finish;
 
-    if (
-        copy_start_x == 0 &&
+    if (copy_start_x == 0 &&
         copy_start_y == 0 &&
         new.width    == canvas->width &&
-        new.height   == canvas->height)
-    {
+        new.height   == canvas->height) {
         // Super fast memcpy when possible, hopefully.
         memcpy(new.pixels, canvas->pixels, SR_CanvasCalcSize(&new));
 
@@ -114,10 +110,8 @@ void SR_MergeCanvasIntoCanvas(
     register char mode)
 {
     register unsigned short x, y;
-    for (x = 0; x < src_canvas->width; x++)
-    {
-        for (y = 0; y < src_canvas->height; y++)
-        {
+    for (x = 0; x < src_canvas->width; x++) {
+        for (y = 0; y < src_canvas->height; y++) {
             // Uses the function for blending individual RGBA values.
             SR_CanvasSetPixel(
                 dest_canvas,
@@ -127,13 +121,10 @@ void SR_MergeCanvasIntoCanvas(
                     SR_CanvasGetPixel(
                         dest_canvas,
                         x + paste_start_x,
-                        y + paste_start_y
-                    ),
+                        y + paste_start_y),
                     SR_CanvasGetPixel(src_canvas, x, y),
                     alpha_modifier,
-                    mode
-                )
-            );
+                    mode));
         }
     }
 }
@@ -155,8 +146,7 @@ SR_Canvas SR_BilinearCanvasScale(
     if (!dest.pixels) { return dest; }
 
     register unsigned int x, y;
-    for(x = 0, y = 0; y < newHeight; x++)
-    {
+    for(x = 0, y = 0; y < newHeight; x++) {
         if(x > newWidth) { x = 0; y++; }
 
         float gx = x / (float)(newWidth ) * (SR_CanvasGetWidth (src) - 1);
@@ -176,8 +166,7 @@ SR_Canvas SR_BilinearCanvasScale(
             SR_CanvasGetPixel(src, gxi + 1, gyi + 1));
 
         uint32_t result = 0;
-        uint8_t i; for(i = 0; i < 4; i++)
-        {
+        for (uint8_t i = 0; i < 4; i++) {
             result |= (uint8_t)blerp(
                 getByte(c00, i),
                 getByte(c10, i),
@@ -202,17 +191,16 @@ SR_Canvas SR_CanvasScale(
     // TODO: Add nearest neighbour scaling - this is super, super important
 
     SR_Canvas final;
-    switch (mode)
-    {
-        case SR_SCALE_BILINEAR:
-            final = SR_BilinearCanvasScale(src, newWidth, newHeight);
+    switch (mode) {
+    case SR_SCALE_BILINEAR:
+        final = SR_BilinearCanvasScale(src, newWidth, newHeight);
 
-            break;
-        default:
-            fprintf(stderr, "Invalid scaling mode!\n");
-            exit(EXIT_FAILURE);
+        break;
+    default:
+        fprintf(stderr, "Invalid scaling mode!\n");
+        exit(EXIT_FAILURE);
 
-            break;
+        break;
     }
     return final;
 }
@@ -230,26 +218,28 @@ unsigned short * SR_NZBoundingBox(SR_Canvas *src)
         for (x = 0; x < src->width; x++)
             if (SR_CanvasPixelCNZ(src, x, y))
                 { firstX = x, firstY = y; goto srnzbbx_first_pixel_done; }
+    
+    goto srnzbbx_empty; // No data found in image - commit die
 srnzbbx_first_pixel_done: // Exit loop
     for (y = src->height - 1; y > 0; y--)
         for (x = src->width - 1; x > 0; x--)
             if (SR_CanvasPixelCNZ(src, x, y))
                 { lastX = x, lastY = y; goto srnzbbx_last_pixel_done; }
+
+    goto srnzbbx_empty;
 srnzbbx_last_pixel_done:
     for (xC = 0; xC <= firstX; xC++)
         for (yC = firstY; yC <= lastY; yC++)
-            if (SR_CanvasPixelCNZ(src, xC, yC))
-            {
+            if (SR_CanvasPixelCNZ(src, xC, yC)) {
                 bbox[0] = xC; bbox[1] = firstY;
                 goto srnzbbx_found_first;
             }
 
-    goto srnzbbx_empty; // No data found in image - commit die
+    goto srnzbbx_empty;
 srnzbbx_found_first:
     for (xC = src->width - 1; xC > lastX; xC--)
         for (yC = lastY; yC >= firstY; yC--)
-            if (SR_CanvasPixelCNZ(src, xC, yC))
-            {
+            if (SR_CanvasPixelCNZ(src, xC, yC)) {
                 bbox[2] = xC; bbox[3] = lastY;
                 goto srnzbbx_bounded;
             }
@@ -293,24 +283,18 @@ SR_OffsetCanvas SR_CanvasShear(
 
     // TODO: Find some way to clean up the repetition here
 
-    if (mode)
-    {
-        for (unsigned short x = 0; x < w; x++)
-        {
+    if (mode) {
+        for (unsigned short x = 0; x < w; x++) {
             mshift = skew_amount + (x - mcenter) * skew;
-            for (unsigned short y = 0; y < h; y++)
-            {
+            for (unsigned short y = 0; y < h; y++) {
                 SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
                 SR_CanvasSetPixel(&(final.canvas), x, y + mshift, pixel);
             }
         }
-	} else
-    {
-        for (unsigned short y = 0; y < h; y++)
-        {
+	} else {
+        for (unsigned short y = 0; y < h; y++) {
             mshift = skew_amount + (y - mcenter) * skew;
-            for (unsigned short x = 0; x < w; x++)
-            {
+            for (unsigned short x = 0; x < w; x++) {
                 SR_RGBAPixel pixel = SR_CanvasGetPixel(src, x, y);
                 SR_CanvasSetPixel(&(final.canvas), x + mshift, y, pixel);
             }
@@ -344,8 +328,7 @@ SR_OffsetCanvas SR_CanvasRotate(
     final.offset_x = 0;
     final.offset_y = 0;
 
-    if (safety_padding)
-    {
+    if (safety_padding) {
         // Create additional padding in case rotated data goes off-canvas
         boundary = MAX(w, h) << 1; // Double the largest side length
         final.canvas = SR_NewCanvas(boundary, boundary);
@@ -361,16 +344,14 @@ SR_OffsetCanvas SR_CanvasRotate(
     if (fmod(degrees, 90) != .0) goto srcvrot_mismatch;
 
     // Trying to rotate 0 degrees? Just copy the canvas, I guess.
-    if (!((unsigned short)degrees % 360))
-    {
+    if (!((unsigned short)degrees % 360)) {
         SR_MergeCanvasIntoCanvas(
             &final.canvas,
             src,
             -final.offset_x, // Still need to use the offset incase padding
             -final.offset_y,
             255,
-            SR_BLEND_REPLACE // Fastest and safest, also no background alpha
-        );
+            SR_BLEND_REPLACE); // Fastest and safest, also no background alpha
 
         goto srcvrot_finished; // Jump to the finishing/cleanup line
     }
@@ -383,33 +364,29 @@ SR_OffsetCanvas SR_CanvasRotate(
 
     // This is the accurate rotation system, but it only works on degrees
     // where x % 90 == 0
-    for (xC = 0; xC < w; xC++)
-    {
-        for (yC = 0; yC < h; yC++)
-        {
+    for (xC = 0; xC < w; xC++) {
+        for (yC = 0; yC < h; yC++) {
             pixbuf = SR_CanvasGetPixel(src, xC, yC);
-            switch (((unsigned short)degrees) % 360)
-            {
-                case 90:
-                    nx = (h - 1) - yC;
-                    ny = xC;
-                    break;
-                case 180:
-                    nx = (w - 1) - xC;
-                    ny = (h - 1) - yC;
-                    break;
-                case 270:
-                    nx = yC;
-                    ny = (w - 1) - xC;
-                    break;
+            switch (((unsigned short)degrees) % 360) {
+            case 90:
+                nx = (h - 1) - yC;
+                ny = xC;
+                break;
+            case 180:
+                nx = (w - 1) - xC;
+                ny = (h - 1) - yC;
+                break;
+            case 270:
+                nx = yC;
+                ny = (w - 1) - xC;
+                break;
             }
 
             SR_CanvasSetPixel(
                 &final.canvas,
                 nx - final.offset_x, // Correct for offset
                 ny - final.offset_y,
-                pixbuf
-            );
+                pixbuf);
         }
     }
 
@@ -424,10 +401,8 @@ srcvrot_mismatch:
     half_w = w >> 1;
     half_h = h >> 1;
 
-    for (x = -half_w; x < half_w; x++)
-    {
-        for (y = -half_h; y < half_h; y++)
-        {
+    for (x = -half_w; x < half_w; x++) {
+        for (y = -half_h; y < half_h; y++) {
             nxM = (x * the_cos + y * the_sin + half_w) - final.offset_x;
             nyM = (y * the_cos - x * the_sin + half_h) - final.offset_y;
             pixel = SR_CanvasGetPixel(src, x + half_w, y + half_h);
@@ -439,20 +414,17 @@ srcvrot_mismatch:
     }
 
 srcvrot_finished:
-    if (safety_padding && autocrop)
-    {
+    if (safety_padding && autocrop) {
         // If autocropping is enabled, auto-crop padded images. This is slow,
         // but saves memory.
         unsigned short * bbox = SR_NZBoundingBox(&final.canvas);
-        if (bbox)
-        {
+        if (bbox) {
             temp = SR_CopyCanvas(
                 &final.canvas,
                 bbox[0],
                 bbox[1],
                 (bbox[2] - bbox[0]) + 1,
-                (bbox[3] - bbox[1]) + 1
-            );
+                (bbox[3] - bbox[1]) + 1);
 
             SR_DestroyCanvas(&final.canvas);
             final.canvas = temp;
@@ -473,27 +445,13 @@ void SR_InplaceFlip(SR_Canvas *src, bool vertical)
     register unsigned short x, y, wmax, hmax, xdest, ydest;
     SR_RGBAPixel temp, pixel;
 
-    if (vertical)
-    {
-        wmax = src->width;
-        hmax = src->height >> 1;
-    } else {
-        wmax = src->width >> 1;
-        hmax = src->height;
-    }
+    wmax = vertical ? src->width : src->width >> 1;
+    hmax = vertical ? src->height >> 1 : src->height;
 
-    for (x = 0; x < wmax; x++)
-    {
-        for (y = 0; y < hmax; y++)
-        {
-            if (vertical)
-            {
-                xdest = x;
-                ydest = (src->height - 1) - y;
-            } else {
-                xdest = (src->width - 1) - x;
-                ydest = y;
-            }
+    for (x = 0; x < wmax; x++) {
+        for (y = 0; y < hmax; y++) {
+            xdest = vertical ? x : (src->width  - 1) - x;
+            ydest = vertical ? (src->height - 1) - y : y;
 
             temp  = SR_CanvasGetPixel(src, xdest, ydest);
             pixel = SR_CanvasGetPixel(src, x, y);

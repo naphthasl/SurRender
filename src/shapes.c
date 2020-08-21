@@ -13,14 +13,14 @@ void SR_DrawLine(
     int x1, 
     int y1)
 {
-    int dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
-    int dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
-    int err = dx + dy, e2;
+    int dx, dy, err, sx, sy, e2;
+    dx =  abs (x1 - x0), sx = x0 < x1 ? 1 : -1;
+    dy = -abs (y1 - y0), sy = y0 < y1 ? 1 : -1; 
+    err = dx + dy, e2;
 
-    for (;;)
-    {
+    for (;;) {
         SR_CanvasSetPixel(canvas, x0, y0, colour);
-        
+
         if (x0 == x1 && y0 == y1) break;
 
         e2 = err << 1;
@@ -32,12 +32,9 @@ void SR_DrawLine(
 void SR_DrawTriOutline(
     SR_Canvas *canvas,
     SR_RGBAPixel colour,
-    int x0,
-    int y0,
-    int x1,
-    int y1,
-    int x2,
-    int y2)
+    int x0, int y0,
+    int x1, int y1,
+    int x2, int y2)
 {
     SR_DrawLine(canvas, colour, x0, y0, x1, y1);
     SR_DrawLine(canvas, colour, x1, y1, x2, y2);
@@ -51,15 +48,17 @@ void SR_DrawTri(
     int x1, int y1,
     int x2, int y2)
 {
-	unsigned short min_x = MIN(x0, MIN(x1, x2));
-	unsigned short min_y = MIN(y0, MIN(y1, y2));
-	unsigned short max_x = MAX(x0, MAX(x1, x2));
-	unsigned short max_y = MAX(y0, MAX(y1, y2));
+	unsigned short  min_x, min_y, max_x, max_y;
+    min_x = MIN(x0, MIN(x1, x2));
+	min_y = MIN(y0, MIN(y1, y2));
+	max_x = MAX(x0, MAX(x1, x2));
+	max_y = MAX(y0, MAX(y1, y2));
     
-    int v0x = x1 - x0;
-    int v0y = y1 - y0;
-    int v1x = x2 - x0;
-    int v1y = y2 - y0;
+    int v0x, v0y, v1x, v1y;
+    v0x = x1 - x0;
+    v0y = y1 - y0;
+    v1x = x2 - x0;
+    v1y = y2 - y0;
     
     float vcross = v0x * v1y - v0y * v1x;
     
@@ -93,14 +92,12 @@ void SR_DrawRectOutline(
     unsigned short x1 = MIN(canvas->width - 1, w);
     unsigned short y1 = MIN(canvas->height - 1, h);
     
-    for (unsigned short xi = x; xi <= x1; xi++)
-    {
+    for (unsigned short xi = x; xi <= x1; xi++) {
         SR_CanvasSetPixel(canvas, xi, y, colour);
         SR_CanvasSetPixel(canvas, xi, h, colour);
     }
     
-    for (unsigned short yi = y + 1; yi < y1; yi++)
-    {
+    for (unsigned short yi = y + 1; yi < y1; yi++) {
         SR_CanvasSetPixel(canvas, x, yi, colour);
         SR_CanvasSetPixel(canvas, w, yi, colour);
     }
@@ -117,10 +114,8 @@ void SR_DrawRect(
     unsigned short x1 = MIN(canvas->width - 1, w + x);
     unsigned short y1 = MIN(canvas->height - 1, h + y);
     
-    for (unsigned short yi = y; yi <= y1; yi++)
-    {
-        for (unsigned short xi = x; xi <= x1; xi++)
-        {
+    for (unsigned short yi = y; yi <= y1; yi++) {
+        for (unsigned short xi = x; xi <= x1; xi++) {
             SR_CanvasSetPixel(canvas, xi, yi, colour);
         }
     }

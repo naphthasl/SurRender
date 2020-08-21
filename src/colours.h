@@ -81,14 +81,14 @@
         )
 
         __inline__ SR_RGBAPixel SR_WholetoRGBA(uint32_t pix)
-            {
-                SR_RGBAPixel temp;
-                temp.rgb.red   = (pix & 0x000000FF)      ;
-                temp.rgb.green = (pix & 0x0000FF00) >>  8;
-                temp.rgb.blue  = (pix & 0x00FF0000) >> 16;
-                temp.alpha     = (pix & 0xFF000000) >> 24;
-                return temp;
-            } 
+        {
+            SR_RGBAPixel temp;
+            temp.rgb.red   = (pix & 0x000000FF)      ;
+            temp.rgb.green = (pix & 0x0000FF00) >>  8;
+            temp.rgb.blue  = (pix & 0x00FF0000) >> 16;
+            temp.alpha     = (pix & 0xFF000000) >> 24;
+            return temp;
+        }
     #endif
 
     // Blend RGBA values
