@@ -90,7 +90,7 @@ void SR_DrawRectOutline(
     unsigned short x1 = MIN(canvas->width - 1, w);
     unsigned short y1 = MIN(canvas->height - 1, h);
     
-    for (unsigned short xi = x; xi <= x1; xi++) {
+    for (unsigned short xi = x; xi < x1; xi++) {
         SR_CanvasSetPixel(canvas, xi, y, colour);
         SR_CanvasSetPixel(canvas, xi, h, colour);
     }
@@ -112,8 +112,8 @@ void SR_DrawRect(
     unsigned short x1 = MIN(canvas->width - 1, w + x);
     unsigned short y1 = MIN(canvas->height - 1, h + y);
     //TODO: only manually draw the first scanline and then memcpy the rest
-    for (unsigned short yi = y; yi <= y1; yi++) {
-        for (unsigned short xi = x; xi <= x1; xi++) {
+    for (unsigned short yi = y; yi < y1; yi++) {
+        for (unsigned short xi = x; xi < x1; xi++) {
             SR_CanvasSetPixel(canvas, xi, yi, colour);
         }
     }

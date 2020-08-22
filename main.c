@@ -41,8 +41,15 @@ int main(void)
     /* edit: this is the current way of testing whether
        canvas allocation has failed or not for now */
     canvy = SR_NewCanvas(1366, 768);
-    SR_DrawRect(&canvy, SR_CreateRGBA(0, 0, 0, 255), 0, 0, 1366, 768);
+    SR_DrawRect(
+        &canvy, SR_CreateRGBA(255, 255, 255, 255), 0, 0,
+        canvy.width, canvy.height);
 
+    SR_Canvas ball = SR_ImageFileToCanvas("./images/TILEROTTEX.BMP");
+    SR_Canvas logo = SR_ImageFileToCanvas("./images/DDLC.BMP");
+    SR_Canvas monkas = SR_ImageFileToCanvas("./images/MENU_HELL.BMP");
+
+    /*
     unsigned int times = 65535;
     unsigned long long i = rdtsc();
     while (--times)
@@ -79,6 +86,7 @@ int main(void)
     SR_OffsetCanvas squish;
     
     // free(imagetest.pixels); imagetest.pixels = NULL;
+    */
 
     if (!SR_CanvasIsValid(&canvy)) {
         status = 3;
@@ -147,6 +155,26 @@ event_loop:
         }
     }
 
+    static int mod = 0;
+    SR_Canvas temp = SR_CopyCanvas(&ball, mod, mod, canvy.width, canvy.height);
+    SR_MergeCanvasIntoCanvas(
+        &canvy, &temp,
+        0, 0,
+        255, SR_BLEND_ADDITIVE);
+    SR_DestroyCanvas(&temp);
+    mod++;
+
+    SR_MergeCanvasIntoCanvas(
+        &canvy, &logo,
+        32, 32,
+        255, SR_BLEND_ADDITIVE);
+
+    SR_MergeCanvasIntoCanvas(
+        &canvy, &monkas,
+        canvy.width - monkas.width, canvy.height - monkas.height,
+        255, SR_BLEND_ADDITIVE);
+
+    /*
     static float minX = -2.0;
     static float maxX = 1.0;
     static float pos = 0;
@@ -181,8 +209,6 @@ event_loop:
         }
     }
     pos += 1;
-    SR_DrawCirc(&canvy, SR_CreateRGBA(0, 0, 255, 255), pos, pos, 69);
-    SR_DrawCircOutline(&canvy, SR_CreateRGBA(0, 255, 255, 255), pos, pos, 70);
     /*
     SR_DrawLine(
         &canvy,
