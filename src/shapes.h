@@ -50,4 +50,19 @@
         unsigned short y,
         unsigned short w,
         unsigned short h);
+    
+    //round
+    void SR_DrawCircOutline(
+        SR_Canvas *canvas,
+        SR_RGBAPixel colour,
+        unsigned short x,
+        unsigned short y,
+        unsigned short r);
+    
+    void SR_DrawCirc(
+        SR_Canvas *canvas,
+        SR_RGBAPixel colour,
+        int x,
+        int y,
+        unsigned long r);
 #endif

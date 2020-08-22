@@ -209,8 +209,6 @@ event_loop:
         }
     }
     pos += 1;
-    */
-
     /*
     SR_DrawLine(
         &canvy,

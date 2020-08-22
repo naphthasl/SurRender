@@ -111,10 +111,64 @@ void SR_DrawRect(
 {
     unsigned short x1 = MIN(canvas->width - 1, w + x);
     unsigned short y1 = MIN(canvas->height - 1, h + y);
-    
+    //TODO: only manually draw the first scanline and then memcpy the rest
     for (unsigned short yi = y; yi < y1; yi++) {
         for (unsigned short xi = x; xi < x1; xi++) {
             SR_CanvasSetPixel(canvas, xi, yi, colour);
+        }
+    }
+}
+
+void SR_DrawCircOutline(
+    SR_Canvas *canvas,
+    SR_RGBAPixel colour,
+    unsigned short x,
+    unsigned short y,
+    unsigned short r)
+{
+    int xs = r;
+    int ys = 0;
+    int er = 0;
+    
+    while (xs >= ys) {
+        SR_CanvasSetPixel(canvas, x + xs, y + ys, colour);
+        SR_CanvasSetPixel(canvas, x + ys, y + xs, colour);
+        SR_CanvasSetPixel(canvas, x - ys, y + xs, colour);
+        SR_CanvasSetPixel(canvas, x - xs, y + ys, colour);
+        SR_CanvasSetPixel(canvas, x - xs, y - ys, colour);
+        SR_CanvasSetPixel(canvas, x - ys, y - xs, colour);
+        SR_CanvasSetPixel(canvas, x + ys, y - xs, colour);
+        SR_CanvasSetPixel(canvas, x + xs, y - ys, colour);
+        
+        if (er <= 0) { ys++; er += (ys << 1) + 1; }
+        if (er >  0) { xs--; er -= (xs << 1) + 1; }
+    }
+}
+
+void SR_DrawCirc(
+    SR_Canvas *canvas,
+    SR_RGBAPixel colour,
+    int x,
+    int y,
+    unsigned long r)
+{
+    unsigned short min_x, min_y, max_x, max_y;
+    min_x = MAX(0, x - r);
+    min_y = MAX(0, y - r);
+    max_x = MIN(canvas->width - 1, x + r);
+    max_y = MIN(canvas->height - 1, y + r);
+    r *= r;
+    
+    for (unsigned short xx = min_x; xx <= max_x; xx++) {
+        for (unsigned short yy = min_y; yy <= max_y; yy++) {
+            int xp, yp;
+            xp = xx - x;
+            xp *= xp;
+            yp = yy - y;
+            yp *= yp;
+            if (xp + yp <= r) {
+                SR_CanvasSetPixel(canvas, xx, yy, colour);
+            }
         }
     }
 }
